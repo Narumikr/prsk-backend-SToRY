@@ -46,7 +46,7 @@ erDiagram
         BIGSERIAL id PK "プレイリストID"
         VARCHAR playlist_name "プレイリスト名"
         BIGINT user_id FK "ユーザーID"
-        TEXT description "説明"
+        VARCHAR description "説明"
         TIMESTAMP created_at "作成日"
         VARCHAR created_by "作成者"
         TIMESTAMP updated_at "更新日"

@@ -42,7 +42,7 @@
 |   1   | プレイリストID | id            | BIGSERIAL    | NOT NULL |   ○   |   -   |   -   | -            | 内部識別用         |
 |   2   | プレイリスト名 | playlist_name | VARCHAR(100) | NOT NULL |   -   |   -   |   -   | -            | プレイリスト名称   |
 |   3   | ユーザーID     | user_id       | BIGINT       | NOT NULL |   -   |   -   |   ○   | -            | m_user.id          |
-|   4   | 説明           | description   | TEXT         |   YES    |   -   |   -   |   -   | -            | プレイリストの説明 |
+|   4   | 説明           | description   | VARCHAR(250) |   YES    |   -   |   -   |   -   | -            | プレイリストの説明 |
 
 ## プレイリスト楽曲テーブル(t_playlist_music)
 
