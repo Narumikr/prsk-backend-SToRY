@@ -1,0 +1,8 @@
+components:
+  schemas:
+    HelloSekaiResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'Hello SEKAI !'
