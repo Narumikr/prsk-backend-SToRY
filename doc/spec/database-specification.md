@@ -2,16 +2,17 @@
 
 ## プロセカ楽曲マスタ(m_prsk_music)
 
-|  No.  | 論理名         | 物理名       | データ型     | Nullable |  PK   |  UK   |  FK   | デフォルト値 | 説明                    |
-| :---: | -------------- | ------------ | ------------ | :------: | :---: | :---: | :---: | ------------ | ----------------------- |
-|   1   | 楽曲ID         | id           | BIGSERIAL    | NOT NULL |   ○   |   -   |   -   | -            | 内部識別用              |
-|   2   | タイトル       | title        | VARCHAR(30)  | NOT NULL |   -   |   ○   |   -   | -            | 楽曲タイトル            |
-|   3   | アーティストID | artist_id    | BIGINT       | NOT NULL |   -   |   -   |   ○   | -            | m_prsk_artist.id        |
-|   4   | 楽曲タイプ     | music_type   | ENUM         | NOT NULL |   -   |   ○   |   -   | -            | 楽曲の種類(music_types) |
-|   5   | 作詞           | lyrics_name  | VARCHAR(20)  |   YES    |   -   |   -   |   -   | -            | 作詞者名                |
-|   6   | 作曲           | music_name   | VARCHAR(20)  |   YES    |   -   |   -   |   -   | -            | 作曲者名                |
-|   7   | ゲスト出演     | featuring    | VARCHAR(10)  |   YES    |   -   |   -   |   -   | -            | feat. キャラクター名    |
-|   8   | YouTube URL    | youtube_link | VARCHAR(100) | NOT NULL |   -   |   -   |   -   | -            | YouTubeの動画URL        |
+|  No.  | 論理名         | 物理名       | データ型     | Nullable |  PK   |  UK   |  FK   | デフォルト値 | 説明                     |
+| :---: | -------------- | ------------ | ------------ | :------: | :---: | :---: | :---: | ------------ | ------------------------ |
+|   1   | 楽曲ID         | id           | BIGSERIAL    | NOT NULL |   ○   |   -   |   -   | -            | 内部識別用               |
+|   2   | タイトル       | title        | VARCHAR(30)  | NOT NULL |   -   |   ○   |   -   | -            | 楽曲タイトル             |
+|   3   | アーティストID | artist_id    | BIGINT       | NOT NULL |   -   |   -   |   ○   | -            | m_prsk_artist.id         |
+|   4   | 楽曲タイプ     | music_type   | ENUM         | NOT NULL |   -   |   ○   |   -   | -            | 楽曲の種類(music_types)  |
+|   5   | 書き下ろし楽曲 | specially    | BOOLEAN      |   YES    |   -   |   -   |   -   | -            | プロセカ書き下ろし楽曲か |
+|   6   | 作詞           | lyrics_name  | VARCHAR(50)  |   YES    |   -   |   -   |   -   | -            | 作詞者名                 |
+|   7   | 作曲           | music_name   | VARCHAR(50)  |   YES    |   -   |   -   |   -   | -            | 作曲者名                 |
+|   8   | ゲスト出演     | featuring    | VARCHAR(10)  |   YES    |   -   |   -   |   -   | -            | feat. キャラクター名     |
+|   9   | YouTube URL    | youtube_link | VARCHAR(100) | NOT NULL |   -   |   -   |   -   | -            | YouTubeの動画URL         |
 
 ### music_typesの値
 |  値   | 名称       | 説明             |
@@ -20,13 +21,13 @@
 |   1   | 3DMV       | プロセカ3DMV楽曲 |
 |   2   | 2DMV       | プロセカ2DMV楽曲 |
 
-## アーティストマスタ(m_prsk_artist)
+## アーティストマスタ(m_artist)
 
 |  No.  | 論理名         | 物理名      | データ型    | Nullable |  PK   |  UK   |  FK   | デフォルト値 | 説明           |
 | :---: | -------------- | ----------- | ----------- | :------: | :---: | :---: | :---: | ------------ | -------------- |
 |   1   | アーティストID | id          | BIGSERIAL   | NOT NULL |   ○   |   -   |   -   | -            | 内部識別用     |
 |   2   | アーティスト名 | artist_name | VARCHAR(50) | NOT NULL |   -   |   ○   |   -   | -            | アーティスト名 |
-|   3   | ユニット名     | unit_name   | VARCHAR(20) | NOT NULL |   -   |   ○   |   -   | -            | ユニット名     |
+|   3   | ユニット名     | unit_name   | VARCHAR(20) |   YES    |   -   |   -   |   -   | -            | ユニット名     |
 
 ## ユーザー名(m_user)
 
@@ -46,13 +47,12 @@
 
 ## プレイリスト楽曲テーブル(t_playlist_music)
 
-| No. | 論理名         | 物理名      | データ型  | Nullable |  PK   |  UK   |  FK   | デフォルト値      | 説明                 |
-| --- | -------------- | ----------- | --------- | :------: | :---: | :---: | :---: | ----------------- | -------------------- |
-| 1   | ID             | id          | BIGSERIAL | NOT NULL |   ○   |   -   |   -   | -                 | 内部識別用           |
-| 2   | プレイリストID | playlist_id | BIGINT    | NOT NULL |   -   |   -   |   ○   | -                 | t_prsk_playlist.id   |
-| 3   | 楽曲ID         | music_id    | BIGINT    | NOT NULL |   -   |   -   |   ○   | -                 | m_prsk_music.id      |
-| 4   | 表示順序       | sort_order  | INTEGER   | NOT NULL |   -   |   -   |   -   | 0                 | プレイリスト内の順序 |
-| 5   | 追加日時       | added_at    | TIMESTAMP | NOT NULL |   -   |   -   |   -   | CURRENT_TIMESTAMP | 追加日時             |
+| No. | 論理名         | 物理名      | データ型  | Nullable |  PK   |  UK   |  FK   | デフォルト値 | 説明                 |
+| --- | -------------- | ----------- | --------- | :------: | :---: | :---: | :---: | ------------ | -------------------- |
+| 1   | ID             | id          | BIGSERIAL | NOT NULL |   ○   |   -   |   -   | -            | 内部識別用           |
+| 2   | プレイリストID | playlist_id | BIGINT    | NOT NULL |   -   |   -   |   ○   | -            | t_prsk_playlist.id   |
+| 3   | 楽曲ID         | music_id    | BIGINT    | NOT NULL |   -   |   -   |   ○   | -            | m_prsk_music.id      |
+| 4   | 表示順序       | sort_order  | INTEGER   | NOT NULL |   -   |   -   |   -   | 0            | プレイリスト内の順序 |
 
 ### 複合ユニーク制約
 - (playlist_id, music_id) - 同じ楽曲の重複登録防止
