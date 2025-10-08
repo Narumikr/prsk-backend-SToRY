@@ -37,21 +37,21 @@ jobs:
               'utf8'
             );
 
-            // 両方のファイルを結合してexport/import文を削除
+            // Combine both files and remove export/import statements
             let combinedCode = constantsCode + '\n\n' + logicCode;
 
-            // import文を削除
+            // Delete import statements
             combinedCode = combinedCode.replace(/import\s+{[^}]+}\s+from\s+['"][^'"]+['"];?\n?/g, '');
 
-            // export文を削除してglobalThisに代入
+            // Remove export statements and assign to globalThis
             combinedCode = combinedCode.replace(/export\s+const\s+(\w+)\s*=/g, 'globalThis.$1 =');
             combinedCode = combinedCode.replace(/export\s+function\s+(\w+)/g, 'globalThis.$1 = function $1');
             combinedCode = combinedCode.replace(/export\s+async\s+function\s+(\w+)/g, 'globalThis.$1 = async function $1');
 
-            // 結合したコードを評価
+            // Evaluate the combined code
             eval(combinedCode);
 
-            // メイン処理を実行
+            // Exec main task
             if (typeof globalThis.handlePrLabeling === 'function') {
               await globalThis.handlePrLabeling(github, context);
             } else {
