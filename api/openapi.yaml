@@ -1,30 +1,33 @@
 # api/openapi.yaml
-openapi: '3.0.3'
+openapi: 3.0.3
 
 info:
-  title: 'prsk Music API'
+  title: prsk Music API
   description: |
     ## Feature
     - Get Hello SEKAI !
     - Get prsk music list
-  version: '0.0.0'
+  version: 0.0.0
 
+# ------------------------------------------------------------------------------ #
+#  Tags                                                                          #
+# ------------------------------------------------------------------------------ #
 tags:
-  - name: Sample
-    description: Trial creation API
+  - { name: hello-sekai, description: First trial API }
 
+# ------------------------------------------------------------------------------ #
+#  Paths                                                                         #
+# ------------------------------------------------------------------------------ #
 paths:
-  '/hello-sekai':
-    get:
-      operationId: getHelloSekai
-      summary: 'Sample API for my learing'
-      description: 'Sample API for my learning'
-      tags: ['Sample']
-      deprecated: false
-      responses:
-        '200':
-          description: 'Success operation'
-          content:
-            application/json:
-              schema:
-                $ref: './schemas/hello-sekai.yaml#/components/schemas/HelloSekaiResponse'
+  # ===== Hello SEKAI ========================================================== #
+  '/project-btw-api/view/hello-sekai':
+    $ref: './api-specs/hello-sekai.yaml#/paths/~1project-btw-api~1view~1hello-sekai'
+
+# ------------------------------------------------------------------------------ #
+#  Components                                                                    #
+# ------------------------------------------------------------------------------ #
+components:
+  schemas:
+    # ===== Hello SEKAI ======================================================== #
+    HelloSekaiResponse:
+      { $ref: './api-specs/hello-sekai.yaml#/components/schemas/HelloSekaiResponse' }
