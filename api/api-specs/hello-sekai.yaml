@@ -18,11 +18,15 @@ paths:
         - hello-sekai
       responses:
         '200':
-          description: 'Success operation'
+          description: Success operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HelloSekaiResponse'
+        '500':
+          $ref: './common.yaml#/components/responses/InternalServerError'
+        '503':
+          $ref: './common.yaml#/components/responses/ServiceUnavailable'
 components:
   schemas:
     HelloSekaiResponse:
@@ -30,4 +34,4 @@ components:
       properties:
         message:
           type: string
-          example: 'Hello SEKAI !'
+          example: Hello SEKAI !
