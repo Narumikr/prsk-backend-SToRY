@@ -1,0 +1,37 @@
+# api/spi-apecs/hello-sekai.yaml
+openapi: 3.0.3
+info:
+  title: Hello SEKAI !
+  description: First API for my learning
+  version: 0.0.0
+  license:
+    name: MIT
+tags:
+  - name: hello-sekai
+    description: Get Hello SEKAI !
+paths:
+  '/project-btw-api/view/hello-sekai':
+    get:
+      operationId: getHelloSekai
+      summary: Get Hello SEKAI !
+      tags:
+        - hello-sekai
+      responses:
+        '200':
+          description: Success operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HelloSekaiResponse'
+        '500':
+          $ref: './common.yaml#/components/responses/InternalServerError'
+        '503':
+          $ref: './common.yaml#/components/responses/ServiceUnavailable'
+components:
+  schemas:
+    HelloSekaiResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Hello SEKAI !
