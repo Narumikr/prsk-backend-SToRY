@@ -33,11 +33,6 @@
     "*.decorator.ts": "typescript"
   },
 
-  "files.exclude": {
-    "**/.git": true,
-    "**/.DS_Store": true,
-    "**/node_modules": true,
-  },
   "search.exclude": {
     "**/node_modules": true,
     "**/dist": true,
