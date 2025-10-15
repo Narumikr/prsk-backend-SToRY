@@ -8,6 +8,18 @@ info:
     - Get Hello SEKAI !
     - Get prsk music list
   version: 0.0.0
+servers:
+  - url: "{protocol}://{host}/project-btw-api"
+    description: API Server
+    variables:
+      protocol:
+        default: https
+        enum:
+          - https
+          - http
+      host:
+        default: localhost:8080
+        description: API host
 
 # ------------------------------------------------------------------------------ #
 #  Tags                                                                          #
@@ -20,8 +32,8 @@ tags:
 # ------------------------------------------------------------------------------ #
 paths:
   # ===== Hello SEKAI ========================================================== #
-  '/project-btw-api/view/hello-sekai':
-    $ref: './api-specs/hello-sekai.yaml#/paths/~1project-btw-api~1view~1hello-sekai'
+  "/view/hello-sekai":
+    $ref: "./api-specs/hello-sekai.yaml#/paths/~1project-btw-api~1view~1hello-sekai"
 
 # ------------------------------------------------------------------------------ #
 #  Components                                                                    #
@@ -30,4 +42,6 @@ components:
   schemas:
     # ===== Hello SEKAI ======================================================== #
     HelloSekaiResponse:
-      { $ref: './api-specs/hello-sekai.yaml#/components/schemas/HelloSekaiResponse' }
+      {
+        $ref: "./api-specs/hello-sekai.yaml#/components/schemas/HelloSekaiResponse",
+      }
