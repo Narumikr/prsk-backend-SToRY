@@ -22,6 +22,7 @@ if ! redocly bundle $API_DIR/openapi.yaml -o $DIST_DIR/$BUNDLED_OPENAPI; then
     exit 1
 fi
 
+echo
 echo "💫 Generated: $DIST_DIR/$BUNDLED_OPENAPI"
 echo
 
@@ -34,5 +35,6 @@ if ! redocly build-docs $DIST_DIR/$BUNDLED_OPENAPI -o $DIST_DIR/$GEN_INDEX_HTML;
     exit 1
 fi
 
+echo
 echo "🍀 Generated: $DIST_DIR/$GEN_INDEX_HTML"
 echo
