@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "doc": "rm -rf dist && bash scripts/generate-api-docs.sh"
+  }
+}

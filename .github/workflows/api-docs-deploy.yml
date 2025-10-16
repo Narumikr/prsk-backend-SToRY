@@ -1,0 +1,81 @@
+# .github/workflows/api-docs-deploy.yml
+name: OpenAPI Specification Docs Deploy
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "api/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "api/**"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Redocly CLI
+        run: npm install -g @redocly/cli
+
+      - name: Create dist directory
+        run: mkdir -p api/dist
+
+      - name: Bundle OpenAPI specification
+        run: |
+          echo "🎸 Bundling OpenAPI..."
+          redocly bundle api/openapi.yaml -o api/dist/bundled-openapi.yaml
+          echo "💫 Bundling completed!"
+
+      - name: Build API documentation
+        run: |
+          echo "🎵 Building HTML documentation..."
+          redocly build-docs api/dist/bundled-openapi.yaml -o api/dist/index.html
+          echo "🍀 Documentation build completed!"
+
+      - name: List generated files
+        run: |
+          echo "🎹 Generated files:"
+          ls -lah api/dist/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "./api/dist"
+
+  deploy-api:
+    needs: build-docs
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

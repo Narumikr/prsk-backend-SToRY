@@ -28,7 +28,7 @@ components:
           type: array
           description: Error details information
           items:
-            $ref: '#/components/schemas/ErrorDetail'
+            $ref: "#/components/schemas/ErrorDetail"
     ErrorDetail:
       type: object
       properties:
@@ -43,11 +43,11 @@ components:
   # ===== Common response ======================================================== #
   responses:
     BadRequest:
-      description: 400 Bad Request
+      description: Bad Request
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
           example:
             statusCode: 400
             error: Bad Request
@@ -56,41 +56,41 @@ components:
               - field: unit_name
                 message: Invalid unit name.
     Unauthorized:
-      description: 401 Unauthorized
+      description: Unauthorized
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
           example:
             statusCode: 401
             error: Unauthorized
             message: Authentication credentials were not provided
     Forbidden:
-      description: 403 Forbidden
+      description: Forbidden
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
           example:
             statusCode: 403
             error: Forbidden
             message: You do not have permission to access this resource.
     NotFound:
-      description: 404 Not Found
+      description: Not Found
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
           example:
             statusCode: 404
             error: Not Found
             message: The requested resource was not found.
     Conflict:
-      description: 409 Conflict
+      description: Conflict
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
           example:
             statusCode: 409
             error: Conflict
@@ -99,21 +99,21 @@ components:
               field: user_name
               message: This username is already in use.
     InternalServerError:
-      description: 500 Internal Server Error
+      description: Internal Server Error
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
           example:
             statusCode: 500
             error: Internal Server Error
             message: Server encountered an unexpected condition.
     ServiceUnavailable:
-      description: 503 Service Unavailable
+      description: Service Unavailable
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
           example:
             statusCode: 503
             error: Service Unavailable

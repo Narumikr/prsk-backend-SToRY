@@ -1,0 +1,4 @@
+# OpenAPI Generator Artifacts.
+/dist
+
+/node_modules
