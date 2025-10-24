@@ -20,7 +20,8 @@ erDiagram
     m_artist {
         BIGSERIAL id PK "アーティストID"
         VARCHAR artist_name UK "アーティスト名"
-        VARCHAR unit_name UK "ユニット名"
+        VARCHAR unit_name "ユニット名"
+        VARCHAR contents "コンテンツ名"
         TIMESTAMP created_at "作成日"
         VARCHAR created_by "作成者"
         TIMESTAMP updated_at "更新日"
