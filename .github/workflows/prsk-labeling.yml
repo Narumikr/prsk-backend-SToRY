@@ -27,13 +27,13 @@ jobs:
 
             // Import constants file
             const constantsCode = fs.readFileSync(
-              path.join(process.env.GITHUB_WORKSPACE, '.github/script/prsk-yell-label.constants.js'),
+              path.join(process.env.GITHUB_WORKSPACE, '.github/scripts/prsk-yell-label.constants.js'),
               'utf8'
             );
 
             // Import logic file
             const logicCode = fs.readFileSync(
-              path.join(process.env.GITHUB_WORKSPACE, '.github/script/prsk-labeling-logic.js'),
+              path.join(process.env.GITHUB_WORKSPACE, '.github/scripts/prsk-labeling-logic.js'),
               'utf8'
             );
 
