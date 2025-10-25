@@ -15,31 +15,72 @@ components:
         statusCode:
           type: integer
           example: 400
-          description: HTTP Status Code
+          description: HTTPステータスコード - HTTP Status Code
         error:
           type: string
           example: Bad Request
-          description: Type of Error
+          description: エラータイプ - Type of Error
         message:
           type: string
           example: Invalid request parameters.
-          description: Error message
+          description: エラーメッセージ - Error message
+      required:
+        - statusCode
+        - error
+        - message
+    ErrorResponseWithDetails:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 400
+          description: HTTPステータスコード - HTTP Status Code
+        error:
+          type: string
+          example: Bad Request
+          description: エラータイプ - Type of Error
+        message:
+          type: string
+          example: Invalid request parameters.
+          description: エラーメッセージ - Error message
         details:
           type: array
-          description: Error details information
+          description: エラー詳細情報 - Error details information
           items:
-            $ref: "#/components/schemas/ErrorDetail"
+            $ref: '#/components/schemas/ErrorDetail'
+      required:
+        - statusCode
+        - error
+        - message
+        - details
     ErrorDetail:
       type: object
       properties:
         field:
           type: string
-          description: The name of field where the error occurred
-          example: title
+          description: どのフィールドでエラーが起きたか - The name of field where the error occurred
         message:
           type: string
-          description: The field error message that occurred
-          example: Required field missing
+          description: そのフィールドに対して起こったエラー内容 - The field error message that occurred
+    Metadata:
+      type: object
+      properties:
+        totalItems:
+          type: integer
+          description: 総アイテム数 - Total number of items
+          example: 100
+        totalPages:
+          type: integer
+          description: 総ページ数 - Total number of pages
+          example: 5
+        pageIndex:
+          type: integer
+          description: 現在のページ番号 - Current page number
+          example: 1
+        limit:
+          type: integer
+          description: 1ページあたりのアイテム数 - Items per page
+          example: 20
   # ===== Common response ======================================================== #
   responses:
     BadRequest:
@@ -47,20 +88,20 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: '#/components/schemas/ErrorResponseWithDetails'
           example:
             statusCode: 400
             error: Bad Request
             message: Invalid request parameters.
             details:
-              - field: unit_name
-                message: Invalid unit name.
+              - field: page
+                message: Page must be a positive integer.
     Unauthorized:
       description: Unauthorized
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: '#/components/schemas/ErrorResponse'
           example:
             statusCode: 401
             error: Unauthorized
@@ -70,7 +111,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: '#/components/schemas/ErrorResponse'
           example:
             statusCode: 403
             error: Forbidden
@@ -80,7 +121,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: '#/components/schemas/ErrorResponse'
           example:
             statusCode: 404
             error: Not Found
@@ -90,20 +131,20 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: '#/components/schemas/ErrorResponseWithDetails'
           example:
             statusCode: 409
             error: Conflict
             message: Resource already exists.
             details:
-              field: user_name
+              field: username
               message: This username is already in use.
     InternalServerError:
       description: Internal Server Error
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: '#/components/schemas/ErrorResponse'
           example:
             statusCode: 500
             error: Internal Server Error
@@ -113,8 +154,31 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: '#/components/schemas/ErrorResponse'
           example:
             statusCode: 503
             error: Service Unavailable
             message: Service is under maintenance. Please try again later.
+  # ===== Common request ========================================================= #
+  parameters:
+    PageParameter:
+      name: page
+      in: query
+      description: ページ番号 - Page number
+      required: false
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+        example: 1
+    LimitParameter:
+      name: limit
+      in: query
+      description: 1ページあたりのアイテム数 - Number of items per page
+      required: false
+      schema:
+        type: integer
+        default: 20
+        minimum: 1
+        maximum: 1000
+        example: 20

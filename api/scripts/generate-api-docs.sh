@@ -38,3 +38,24 @@ fi
 echo
 echo "🍀 Generated: $DIST_DIR/$GEN_INDEX_HTML"
 echo
+
+# open HTML file in browser
+echo "🌐 Opening documentation in browser..."
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS
+    open $DIST_DIR/$GEN_INDEX_HTML
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    # Linux
+    if command -v xdg-open > /dev/null; then
+        xdg-open $DIST_DIR/$GEN_INDEX_HTML
+    elif command -v sensible-browser > /dev/null; then
+        sensible-browser $DIST_DIR/$GEN_INDEX_HTML
+    else
+        echo "⚠️  ブラウザを自動で開けませんでした。手動で開いてください: $DIST_DIR/$GEN_INDEX_HTML"
+    fi
+elif [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "cygwin" ]]; then
+    # Windows (Git Bash / Cygwin)
+    start $DIST_DIR/$GEN_INDEX_HTML
+else
+    echo "⚠️  お使いのOSでは自動でブラウザを開けませんでした。手動で開いてください: $DIST_DIR/$GEN_INDEX_HTML"
+fi

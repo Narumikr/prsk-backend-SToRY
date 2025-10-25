@@ -1,4 +1,4 @@
-# api/spi-apecs/hello-sekai.yaml
+# api/spi-specs/hello-sekai.yaml
 openapi: 3.0.3
 info:
   title: Hello SEKAI !
@@ -10,23 +10,23 @@ tags:
   - name: hello-sekai
     description: Get Hello SEKAI !
 paths:
-  "/project-btw-api/view/hello-sekai":
+  '/view/hello-sekai':
     get:
       operationId: getHelloSekai
       summary: Get Hello SEKAI !
       tags:
         - hello-sekai
       responses:
-        "200":
+        '200':
           description: Success operation
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HelloSekaiResponse"
-        "500":
-          $ref: "./common.yaml#/components/responses/InternalServerError"
-        "503":
-          $ref: "./common.yaml#/components/responses/ServiceUnavailable"
+                $ref: '#/components/schemas/HelloSekaiResponse'
+        '500':
+          $ref: './common.yaml#/components/responses/InternalServerError'
+        '503':
+          $ref: './common.yaml#/components/responses/ServiceUnavailable'
 components:
   schemas:
     HelloSekaiResponse:
