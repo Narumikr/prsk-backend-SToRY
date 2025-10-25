@@ -1,0 +1,69 @@
+#api/api-specs/mgt-artist
+openapi: 3.0.3
+info:
+  title: Artist Master API
+  description: アーティストマスタ管理API - Management artist master api
+  version: 0.0.0
+  license:
+    name: MIT
+tags:
+  - name: artists
+    description: |
+      アーティストマスタのデータを管理するAPI - Management data of artist master API
+      ## Features
+      - アーティスト情報の登録 - Register artist information
+      - アーティスト一覧取得 - Get artists list
+      - アーティスト情報の更新 - Update artist information
+      - アーティスト情報の削除 - Delete artist information
+paths:
+  '/artist':
+    get:
+      tags:
+        - artists
+      summary: アーティスト一覧取得 - Get artists list
+      description: アーティスト一覧が取得できます - You can get artists list
+      operationId: getArtistsList
+      parameters:
+        - $ref: './common.yaml#/components/parameters/PageParameter'
+        - $ref: './common.yaml#/components/parameters/LimitParameter'
+      responses:
+        '200':
+          description: Success operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtistResponse'
+        '400':
+          $ref: './common.yaml#/components/responses/BadRequest'
+          example:
+            statusCode: 400
+            error: Bad Request
+            message: Invalid request parameters.
+            details:
+              - field: page
+                message: Page must be a positive integer.
+        '500':
+          $ref: './common.yaml#/components/responses/InternalServerError'
+        '503':
+          $ref: './common.yaml#/components/responses/ServiceUnavailable'
+components:
+  schemas:
+    ArtistResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: アーティストID - Artist ID
+        artistName:
+          type: string
+          example: Leo/need
+          description: アーティスト名 - Artist Name
+        unitName:
+          type: string
+          example: Leo/need
+          description: ユニット名 - Unit Name
+        content:
+          type: string
+          example: プロセカ
+          description: コンテンツ名 - Content Name

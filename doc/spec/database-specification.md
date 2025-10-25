@@ -28,7 +28,7 @@
 |   1   | アーティストID | id          | BIGSERIAL   | NOT NULL |   ○   |   -   |   -   | -            | 内部識別用     |
 |   2   | アーティスト名 | artist_name | VARCHAR(50) | NOT NULL |   -   |   ○   |   -   | -            | アーティスト名 |
 |   3   | ユニット名     | unit_name   | VARCHAR(20) |   YES    |   -   |   -   |   -   | -            | ユニット名     |
-|   4   | コンテンツ     | contents    | VARCHAR(20) |   YES    |   -   |   -   |   -   | -            | コンテンツ名   |
+|   4   | コンテンツ     | content     | VARCHAR(20) |   YES    |   -   |   -   |   -   | -            | コンテンツ名   |
 
 ## ユーザー名(m_user)
 

@@ -4,44 +4,35 @@ openapi: 3.0.3
 info:
   title: prsk Music API
   description: |
-    ## Feature
-    - Get Hello SEKAI !
-    - Get prsk music list
+    - **Features**
+      - アーティストマスタ管理 - Management artist master
   version: 0.0.0
 servers:
-  - url: "{protocol}://{host}/project-btw-api"
-    description: API Server
-    variables:
-      protocol:
-        default: https
-        enum:
-          - https
-          - http
-      host:
-        default: localhost:8080
-        description: API host
+  - url: 'http://localhost:8080/btw-api/v1'
+    description: development
 
 # ------------------------------------------------------------------------------ #
 #  Tags                                                                          #
 # ------------------------------------------------------------------------------ #
 tags:
-  - { name: hello-sekai, description: First trial API }
+  # - name: hello-sekai
+  #   description: Get Hello SEKAI !
+  - name: artists
+    description: |
+      アーティストマスタのデータを管理するAPI - Management data of artist master API
+      - **Features**
+        - アーティスト情報の登録 - Register artist information
+        - アーティスト一覧取得 - Get artists list
+        - アーティスト情報の更新 - Update artist information
+        - アーティスト情報の削除 - Delete artist information
 
 # ------------------------------------------------------------------------------ #
 #  Paths                                                                         #
 # ------------------------------------------------------------------------------ #
 paths:
   # ===== Hello SEKAI ========================================================== #
-  "/view/hello-sekai":
-    $ref: "./api-specs/hello-sekai.yaml#/paths/~1project-btw-api~1view~1hello-sekai"
-
-# ------------------------------------------------------------------------------ #
-#  Components                                                                    #
-# ------------------------------------------------------------------------------ #
-components:
-  schemas:
-    # ===== Hello SEKAI ======================================================== #
-    HelloSekaiResponse:
-      {
-        $ref: "./api-specs/hello-sekai.yaml#/components/schemas/HelloSekaiResponse",
-      }
+  # '/view/hello-sekai':
+  #   $ref: './api-specs/hello-sekai.yaml#/paths/~1view~1hello-sekai'
+  # ===== Artist Master API ==================================================== #
+  '/artist':
+    $ref: './api-specs/mgt-artist.yaml#/paths/~1artist'
