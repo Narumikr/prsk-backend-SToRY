@@ -28,26 +28,66 @@ paths:
         - $ref: './common.yaml#/components/parameters/LimitParameter'
       responses:
         '200':
-          description: Success operation
+          description: Get list successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ArtistResponse'
+        '400':
+          $ref: './common.yaml#/components/responses/BadRequest'
+        '500':
+          $ref: './common.yaml#/components/responses/InternalServerError'
+        '503':
+          $ref: './common.yaml#/components/responses/ServiceUnavailable'
+    post:
+      tags:
+        - artists
+      summary: アーティスト情報の登録 - Register artist information
+      description: アーティスト情報を登録できます - You can register artist information
+      operationId: registerArtist
+      requestBody:
+        description: アーティスト情報 - Artist information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArtistRequest'
+      responses:
+        '201':
+          description: Created successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ArtistResponse'
         '400':
           $ref: './common.yaml#/components/responses/BadRequest'
-          example:
-            statusCode: 400
-            error: Bad Request
-            message: Invalid request parameters.
-            details:
-              - field: page
-                message: Page must be a positive integer.
+        '409':
+          $ref: './common.yaml#/components/responses/Conflict'
         '500':
           $ref: './common.yaml#/components/responses/InternalServerError'
         '503':
           $ref: './common.yaml#/components/responses/ServiceUnavailable'
 components:
   schemas:
+    ArtistRequest:
+      type: object
+      properties:
+        artistName:
+          type: string
+          example: Leo/need
+          description: アーティスト名 - Artist Name
+        unitName:
+          type: string
+          example: Leo/need
+          description: ユニット名 - Unit Name
+        content:
+          type: string
+          example: プロセカ
+          description: コンテンツ名 - Content Name
+      required:
+        - artistName
     ArtistResponse:
       type: object
       properties:
