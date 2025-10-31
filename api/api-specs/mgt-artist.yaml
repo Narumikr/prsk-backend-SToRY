@@ -69,6 +69,44 @@ paths:
           $ref: './common.yaml#/components/responses/InternalServerError'
         '503':
           $ref: './common.yaml#/components/responses/ServiceUnavailable'
+  '/artist/{id}':
+    put:
+      tags:
+        - artists
+      summary: アーティスト情報の更新 - Update artist information
+      description: アーティスト情報を更新できます - You can update artist information
+      operationId: updateArtist
+      parameters:
+        - name: id
+          in: path
+          description: アーティストID - Artist ID
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        description: アーティスト情報 - Artist information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArtistRequest'
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtistResponse'
+        '400':
+          $ref: './common.yaml#/components/responses/BadRequest'
+        '404':
+          $ref: './common.yaml#/components/responses/NotFound'
+        '500':
+          $ref: './common.yaml#/components/responses/InternalServerError'
+        '503':
+          $ref: './common.yaml#/components/responses/ServiceUnavailable'
+
 components:
   schemas:
     ArtistRequest:
