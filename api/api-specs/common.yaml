@@ -81,6 +81,27 @@ components:
           type: integer
           description: 1ページあたりのアイテム数 - Items per page
           example: 20
+    AuditInfo:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-format
+          description: レコード作成日時 - Created date
+          example: 2020-09-30T08:31:00Z
+        createdBy:
+          type: string
+          description: レコード作成者 - User who created the record
+          example: 初音ミク
+        updatedAt:
+          type: string
+          format: date-format
+          description: レコード更新日時 - Updated date
+          example: 2025-09-06T08:15:00Z
+        updatedBy:
+          type: string
+          description: レコード更新者 - User who update the record
+          example: 星乃 一歌
   # ===== Common response ======================================================== #
   responses:
     BadRequest:
