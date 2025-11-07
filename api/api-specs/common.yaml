@@ -102,6 +102,11 @@ components:
           type: string
           description: レコード更新者 - User who update the record
           example: 星乃 一歌
+      required:
+        - createdAt
+        - createdBy
+        - updatedAt
+        - updatedBy
   # ===== Common response ======================================================== #
   responses:
     BadRequest:
