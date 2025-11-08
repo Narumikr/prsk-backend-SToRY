@@ -15,6 +15,7 @@ erDiagram
         VARCHAR created_by "作成者"
         TIMESTAMP updated_at "更新日"
         VARCHAR updated_by "更新者"
+        BOOLEAN is_deleted "削除フラグ"
     }
 
     m_artists {
@@ -26,6 +27,7 @@ erDiagram
         VARCHAR created_by "作成者"
         TIMESTAMP updated_at "更新日"
         VARCHAR updated_by "更新者"
+        BOOLEAN is_deleted "削除フラグ"
     }
 
     m_prsk_music {
@@ -42,6 +44,7 @@ erDiagram
         VARCHAR created_by "作成者"
         TIMESTAMP updated_at "更新日"
         VARCHAR updated_by "更新者"
+        BOOLEAN is_deleted "削除フラグ"
     }
 
     t_prsk_playlist {
@@ -53,6 +56,7 @@ erDiagram
         VARCHAR created_by "作成者"
         TIMESTAMP updated_at "更新日"
         VARCHAR updated_by "更新者"
+        BOOLEAN is_deleted "削除フラグ"
     }
 
     t_playlist_music {
@@ -64,5 +68,6 @@ erDiagram
         VARCHAR created_by "作成者"
         TIMESTAMP updated_at "更新日"
         VARCHAR updated_by "更新者"
+        BOOLEAN is_deleted "削除フラグ"
     }
 ```
