@@ -81,6 +81,11 @@ components:
           type: integer
           description: 1ページあたりのアイテム数 - Items per page
           example: 20
+      required:
+        - totalItems
+        - totalPages
+        - pageIndex
+        - limit
     AuditInfo:
       type: object
       properties:

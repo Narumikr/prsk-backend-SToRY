@@ -6,7 +6,7 @@ info:
   description: |
     - **Features**
       - アーティストマスタ管理 - Management artist master
-  version: 0.0.0
+  version: 0.1.0
 servers:
   - url: 'http://localhost:8080/btw-api/v1'
     description: development
@@ -35,7 +35,7 @@ paths:
   #   $ref: './api-specs/hello-sekai.yaml#/paths/~1view~1hello-sekai'
 
   # ===== Artist Master API ==================================================== #
-  '/artist':
-    $ref: './api-specs/mgt-artist.yaml#/paths/~1artist'
-  '/artist/{id}':
-    $ref: './api-specs/mgt-artist.yaml#/paths/~1artist~1{id}'
+  '/artists':
+    $ref: './api-specs/mgt-artist.yaml#/paths/~1artists'
+  '/artists/{id}':
+    $ref: './api-specs/mgt-artist.yaml#/paths/~1artists~1{id}'
