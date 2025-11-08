@@ -2,12 +2,12 @@
 
 ```mermaid
 erDiagram
-    m_user ||--o{ t_prsk_playlist : "作成する"
-    m_artist ||--o{ m_prsk_music : "所属する"
+    m_users ||--o{ t_prsk_playlist : "作成する"
+    m_artists ||--o{ m_prsk_music : "所属する"
     m_prsk_music ||--o{ t_playlist_music : "含まれる"
     t_prsk_playlist ||--o{ t_playlist_music : "持つ"
 
-    m_user {
+    m_users {
         BIGSERIAL id PK "ユーザーID"
         VARCHAR user_name UK "ユーザー名"
         VARCHAR password "パスワード"
@@ -17,7 +17,7 @@ erDiagram
         VARCHAR updated_by "更新者"
     }
 
-    m_artist {
+    m_artists {
         BIGSERIAL id PK "アーティストID"
         VARCHAR artist_name UK "アーティスト名"
         VARCHAR unit_name "ユニット名"
