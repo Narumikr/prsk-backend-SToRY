@@ -16,7 +16,7 @@ tags:
       - アーティスト情報の更新 - Update artist information
       - アーティスト情報の削除 - Delete artist information
 paths:
-  '/artist':
+  '/artists':
     get:
       tags:
         - artists
@@ -32,9 +32,24 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ArtistResponse'
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: '#/components/schemas/ArtistResponse'
+                        - type: object
+                          properties:
+                            auditInfo:
+                              $ref: './common.yaml#/components/schemas/AuditInfo'
+                          required:
+                            - auditInfo
+                  meta:
+                    $ref: './common.yaml#/components/schemas/Metadata'
+                required:
+                  - items
+                  - meta
         '400':
           $ref: './common.yaml#/components/responses/BadRequest'
         '500':
@@ -45,7 +60,14 @@ paths:
       tags:
         - artists
       summary: アーティスト情報の登録 - Register artist information
-      description: アーティスト情報を登録できます - You can register artist information
+      description: |
+        アーティスト情報を登録できます - You can register artist information
+
+        ### Conflict Conditions
+        以下の条件に該当する場合、409 Conflictを返します
+        - 同じartistNameが既に存在するとき
+        ### Note
+        1つのアーティスト名につき1レコードのみ登録可能です。
       operationId: registerArtist
       requestBody:
         description: アーティスト情報 - Artist information
@@ -60,7 +82,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ArtistResponse'
+                allOf:
+                  - $ref: '#/components/schemas/ArtistResponse'
+                  - type: object
+                    properties:
+                      auditInfo:
+                        $ref: './common.yaml#/components/schemas/AuditInfo'
+                    required:
+                      - auditInfo
         '400':
           $ref: './common.yaml#/components/responses/BadRequest'
         '409':
@@ -69,12 +98,16 @@ paths:
           $ref: './common.yaml#/components/responses/InternalServerError'
         '503':
           $ref: './common.yaml#/components/responses/ServiceUnavailable'
-  '/artist/{id}':
-    put:
+  '/artists/{id}':
+    patch:
       tags:
         - artists
       summary: アーティスト情報の更新 - Update artist information
-      description: アーティスト情報を更新できます - You can update artist information
+      description: |
+        アーティスト情報を更新できます - You can update artist information
+
+        ### Conflict Conditions
+        - 他のアーティストと同じartistNameに更新しようとしたとき409を返します
       operationId: updateArtist
       parameters:
         - name: id
@@ -83,6 +116,7 @@ paths:
           required: true
           schema:
             type: integer
+            minimum: 1
             example: 1
       requestBody:
         description: アーティスト情報 - Artist information
@@ -90,14 +124,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ArtistRequest'
+              $ref: '#/components/schemas/OptionalArtistRequest'
       responses:
         '200':
           description: Updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ArtistResponse'
+                allOf:
+                  - $ref: '#/components/schemas/ArtistResponse'
+                  - type: object
+                    properties:
+                      auditInfo:
+                        $ref: './common.yaml#/components/schemas/AuditInfo'
+                    required:
+                      - auditInfo
         '400':
           $ref: './common.yaml#/components/responses/BadRequest'
         '404':
@@ -110,7 +151,20 @@ paths:
       tags:
         - artists
       summary: アーティスト情報の削除 - Delete artist information
-      description: アーティスト情報を削除できます - You can delete artist information
+      description: |
+        アーティスト情報を削除できます - You can delete artist information
+
+        ### Idempotency
+        - 既に削除済みのアーティストに対して、再度Delete実行した場合も204を返します
+        - 存在しないIdに対してのDeleteは404を返します
+
+        ### Implementation Note
+        - 論理削除を使用します
+        - 物理的なデータは削除されません
+
+        ### Related Data
+        - 楽曲データは削除されません
+        - 楽曲から参照されているアーティストは不明なアーティストとして扱われるようになります
       operationId: deleteArtist
       parameters:
         - name: id
@@ -119,6 +173,7 @@ paths:
           required: true
           schema:
             type: integer
+            minimum: 1
             example: 1
       responses:
         '204':
@@ -139,34 +194,75 @@ components:
       properties:
         artistName:
           type: string
+          nullable: false
+          minLength: 1
+          maxLength: 50
           example: Leo/need
           description: アーティスト名 - Artist Name
         unitName:
           type: string
+          nullable: true
+          minLength: 1
+          maxLength: 25
           example: Leo/need
           description: ユニット名 - Unit Name
         content:
           type: string
+          nullable: true
+          minLength: 1
+          maxLength: 20
           example: プロセカ
           description: コンテンツ名 - Content Name
       required:
         - artistName
+    OptionalArtistRequest:
+      type: object
+      minProperties: 1
+      properties:
+        artistName:
+          type: string
+          nullable: false
+          minLength: 1
+          maxLength: 50
+          example: Leo/need
+          description: アーティスト名 - Artist Name
+        unitName:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 25
+          example: Leo/need
+          description: ユニット名 - Unit Name
+        content:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 20
+          example: プロセカ
+          description: コンテンツ名 - Content Name
     ArtistResponse:
       type: object
       properties:
         id:
           type: integer
+          nullable: false
           example: 1
           description: アーティストID - Artist ID
         artistName:
           type: string
+          nullable: false
           example: Leo/need
           description: アーティスト名 - Artist Name
         unitName:
           type: string
+          nullable: true
           example: Leo/need
           description: ユニット名 - Unit Name
         content:
           type: string
+          nullable: true
           example: プロセカ
           description: コンテンツ名 - Content Name
+      required:
+        - id
+        - artistName
