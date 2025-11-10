@@ -71,6 +71,7 @@ paths:
       operationId: registerArtist
       requestBody:
         description: アーティスト情報 - Artist information
+        required: true
         content:
           application/json:
             schema:
