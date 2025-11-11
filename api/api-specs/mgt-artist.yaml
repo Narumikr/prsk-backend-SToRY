@@ -99,7 +99,7 @@ paths:
         '503':
           $ref: './common.yaml#/components/responses/ServiceUnavailable'
   '/artists/{id}':
-    patch:
+    put:
       tags:
         - artists
       summary: アーティスト情報の更新 - Update artist information
