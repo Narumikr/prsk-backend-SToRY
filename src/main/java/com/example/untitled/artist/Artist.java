@@ -1,6 +1,6 @@
 package com.example.untitled.artist;
 
-import com.example.untitled.common.BaseEntity;
+import com.example.untitled.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

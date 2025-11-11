@@ -1,8 +1,13 @@
 package com.example.untitled.artist;
 
 import com.example.untitled.artist.dto.ArtistRequest;
+import com.example.untitled.artist.dto.OptionalArtistRequest;
+import com.example.untitled.common.util.EntityHelper;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import static com.example.untitled.common.util.EntityHelper.*;
 
 @Service
 @Transactional
@@ -24,6 +29,18 @@ public class ArtistService {
         artist.setArtistName(dto.getArtistName());
         artist.setUnitName(dto.getUnitName());
         artist.setContent(dto.getContent());
+
+        return artistRepository.save(artist);
+    }
+
+    public Artist updateArtist(Long id, OptionalArtistRequest dto) {
+        Artist artist = artistRepository.findByIdAndIsDeleted(id, false)
+                .orElseThrow(() -> new EntityNotFoundException("Artist not found for id: " + id));
+
+        // Memo: artist::setArtistNameはラムダ式の簡略記法で(value) -> artist.setArtistName(value));と同じ
+        updateIfNotNull(dto.getArtistName(), artist::setArtistName);
+        updateIfNotNull(dto.getUnitName(), artist::setUnitName);
+        updateIfNotNull(dto.getContent(), artist::setContent);
 
         return artistRepository.save(artist);
     }

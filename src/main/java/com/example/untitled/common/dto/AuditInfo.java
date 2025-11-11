@@ -1,6 +1,6 @@
 package com.example.untitled.common.dto;
 
-import com.example.untitled.common.BaseEntity;
+import com.example.untitled.common.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

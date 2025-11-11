@@ -8,5 +8,7 @@ import java.util.Optional;
 @Repository
 public interface ArtistRepository extends JpaRepository<Artist, Long> {
 
+    Optional<Artist> findByIdAndIsDeleted(Long id, boolean isDeleted);
+
     Optional<Artist> findByArtistNameAndIsDeleted(String artistName, boolean isDeleted);
 }

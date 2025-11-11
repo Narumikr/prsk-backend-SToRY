@@ -8,16 +8,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * アーティストマスタAPIリクエスト for POST
+ * アーティストマスタAPIリクエスト for PUT
  */
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArtistRequest {
+public class OptionalArtistRequest {
 
     /** アーティスト名 **/
-    @NotBlank(message = "アーティスト名は必須です。- The artist name is required.")
     @Size(max = 50, message = "アーティスト名は50文字以内で入力してください。 - Please enter the artist name within 50 characters.")
     private String artistName;
 
