@@ -2,6 +2,7 @@ package com.example.untitled.artist;
 
 import com.example.untitled.artist.dto.ArtistRequest;
 import com.example.untitled.artist.dto.ArtistResponse;
+import com.example.untitled.artist.dto.OptionalArtistRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,5 +37,16 @@ public class ArtistController {
         Artist artist = artistService.createArtist(request);
         ArtistResponse response = ArtistResponse.from(artist);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    // PUT /artists/{id} : アーティスト情報の更新 - Update artist information
+    @PutMapping("/{id}")
+    public ResponseEntity<ArtistResponse> updateArtist(
+            @PathVariable Long id,
+            @Valid @RequestBody OptionalArtistRequest request
+    ) {
+        Artist artist = artistService.updateArtist(id, request);
+        ArtistResponse response = ArtistResponse.from(artist);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
