@@ -2,10 +2,13 @@ package com.example.untitled.artist;
 
 import com.example.untitled.artist.dto.ArtistRequest;
 import com.example.untitled.artist.dto.OptionalArtistRequest;
-import com.example.untitled.common.util.EntityHelper;
+import com.example.untitled.common.dto.ErrorDetails;
+import com.example.untitled.common.exception.DuplicationResourceException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static com.example.untitled.common.util.EntityHelper.*;
 
@@ -22,7 +25,12 @@ public class ArtistService {
     public Artist createArtist(ArtistRequest dto) {
         artistRepository.findByArtistNameAndIsDeleted(dto.getArtistName(), false)
                 .ifPresent(artist -> {
-                    throw new IllegalArgumentException("Artist name already exist: " + dto.getArtistName());
+                    throw new DuplicationResourceException(
+                            "Conflict detected",
+                            List.of(new ErrorDetails(
+                                    "artistName",
+                                    "Artist name already exist: " + dto.getArtistName()))
+                    );
                 });
 
         Artist artist = new Artist();
