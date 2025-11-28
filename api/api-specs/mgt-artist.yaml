@@ -143,6 +143,8 @@ paths:
           $ref: './common.yaml#/components/responses/BadRequest'
         '404':
           $ref: './common.yaml#/components/responses/NotFound'
+        '409':
+          $ref: './common.yaml#/components/responses/Conflict'
         '500':
           $ref: './common.yaml#/components/responses/InternalServerError'
         '503':
