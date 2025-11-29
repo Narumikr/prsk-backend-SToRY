@@ -45,6 +45,18 @@ public class ArtistService {
         Artist artist = artistRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new EntityNotFoundException("Artist not found for id: " + id));
 
+        if(dto.getArtistName() != null && !dto.getArtistName().equals(artist.getArtistName())) {
+            artistRepository.findByArtistNameAndIsDeleted(dto.getArtistName(), false)
+                    .ifPresent(existArtist -> {
+                        throw new DuplicationResourceException(
+                                "Conflict detected",
+                                List.of(new ErrorDetails(
+                                        "artistName",
+                                        "Artist name already exist: " + dto.getArtistName()))
+                        );
+                    });
+        }
+
         // Memo: artist::setArtistNameはラムダ式の簡略記法で(value) -> artist.setArtistName(value));と同じ
         updateIfNotNull(dto.getArtistName(), artist::setArtistName);
         updateIfNotNull(dto.getUnitName(), artist::setUnitName);
