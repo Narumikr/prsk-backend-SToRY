@@ -13,7 +13,7 @@ import org.springframework.data.domain.Page;
 public class MetaInfo {
 
     /** 総アイテム数 **/
-    private int totalItems;
+    private Long totalItems;
 
     /** 総ページ数 **/
     private int totalPages;
@@ -26,7 +26,7 @@ public class MetaInfo {
 
     public static MetaInfo from(Page<Artist> page) {
         return new MetaInfo(
-                page.getTotalPages(),
+                page.getTotalElements(),
                 page.getTotalPages(),
                 page.getNumber(),
                 page.getSize()
