@@ -1,9 +1,13 @@
 package com.example.untitled.artist;
 
+import com.example.untitled.artist.dto.ArtistListResponse;
 import com.example.untitled.artist.dto.ArtistRequest;
 import com.example.untitled.artist.dto.ArtistResponse;
 import com.example.untitled.artist.dto.OptionalArtistRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +25,18 @@ public class ArtistController {
     }
 
     // GET /artists : アーティスト一覧取得 - Get artists list
-//    @GetMapping
-//    public List<ArtistResponse> getArtistsList(
-//            @RequestParam(required = false, defaultValue = "1") Integer page,
-//            @RequestParam(required = false, defaultValue = "20") Integer limit
-//    ) {
-//        ;
-//    }
+    @GetMapping
+    public ResponseEntity<ArtistListResponse> getArtistsList(
+            @RequestParam(required = false, defaultValue = "1")
+            @Min(value = 1, message = "Page must be 1 or greater") Integer page,
+            @RequestParam(required = false, defaultValue = "20")
+            @Min(value = 1, message = "Limit must be at least 1")
+            @Max(value = 100, message = "Limit must not exceed 100") Integer limit
+    ) {
+        Page<Artist> artistPage = artistService.getAllArtists(page - 1, limit, "artistName", "ASC");
+        ArtistListResponse response = ArtistListResponse.from(artistPage);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 
     // POST /artists : アーティスト情報の登録 - Register artist information
     @PostMapping

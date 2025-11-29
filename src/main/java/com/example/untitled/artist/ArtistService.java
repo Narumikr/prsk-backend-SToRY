@@ -6,6 +6,10 @@ import com.example.untitled.common.dto.ErrorDetails;
 import com.example.untitled.common.exception.DuplicationResourceException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +24,14 @@ public class ArtistService {
 
     public ArtistService(ArtistRepository artistRepository) {
         this.artistRepository = artistRepository;
+    }
+
+    public Page<Artist> getAllArtists(int page, int size, String sortBy, String direction) {
+        Sort.Direction sortDirection = direction.equalsIgnoreCase("DESC")
+                ? Sort.Direction.DESC : Sort.Direction.ASC;
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
+        return artistRepository.findByIsDeleted(false, pageable);
     }
 
     public Artist createArtist(ArtistRequest dto) {
