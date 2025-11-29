@@ -4,6 +4,7 @@ import com.example.untitled.common.dto.ErrorDetails;
 import com.example.untitled.common.dto.ErrorResponse;
 import com.example.untitled.common.dto.ErrorResponseWithDetails;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -38,6 +39,33 @@ public class GlobalExceptionHandler {
                 "Validation failed",
                 details
 
+        );
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponseWithDetails> handleConstrainViolation(
+            ConstraintViolationException exception
+    ) {
+        List<ErrorDetails> details = exception.getConstraintViolations()
+                .stream()
+                .map(violation -> {
+                    String temp = violation.getPropertyPath().toString();
+                    System.out.println(temp);
+                    String field = temp.substring(temp.lastIndexOf('.') + 1);
+                    return new ErrorDetails(
+                            field,
+                            violation.getMessage()
+                    );
+                })
+                .collect(Collectors.toList());
+
+        ErrorResponseWithDetails error = new ErrorResponseWithDetails(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.name(),
+                "Validation failed",
+                details
         );
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
