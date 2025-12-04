@@ -60,4 +60,13 @@ public class ArtistController {
         ArtistResponse response = ArtistResponse.from(artist);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    // DELETE /artists/{id} : アーティスト情報の削除 - Delete artist information
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteArtist(
+            @PathVariable Long id
+    ) {
+        artistService.deleteArtist(id);
+        return ResponseEntity.noContent().build();
+    }
 }

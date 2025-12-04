@@ -76,4 +76,12 @@ public class ArtistService {
 
         return artistRepository.save(artist);
     }
+
+    public void deleteArtist(Long id) {
+        Artist artist = artistRepository.findByIdAndIsDeleted(id, false)
+                .orElseThrow(() -> new EntityNotFoundException("Artist not found for id: " + id));
+
+        artist.setDeleted(true);
+        artistRepository.save(artist);
+    }
 }
