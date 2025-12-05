@@ -67,7 +67,7 @@ paths:
         以下の条件に該当する場合、409 Conflictを返します
         - 同じuserNameが既に存在するとき
         ### Note
-        - 1つのユーザー名につき1レコードのみ登録可能です。
+        1つのユーザー名につき1レコードのみ登録可能です。
       operationId: createUser
       requestBody:
         description: ユーザー情報 - User information
@@ -107,13 +107,13 @@ paths:
         ユーザー情報を更新できます - You can update user information
 
         ### Not Found Conditions
-        - 指定したIDのユーザーが存在しない場合、404 Not Foundを返します
+        指定したIDのユーザーが存在しない場合、404 Not Foundを返します
 
         ### Authentication error
-        - ユーザーに紐づくパスワードが間違っている場合、401 Unauthorizedを返します
+        ユーザーに紐づくパスワードが間違っている場合、401 Unauthorizedを返します
 
         ### Conflict Conditions
-        - 他のユーザーと同じuserNameに更新しようとしたとき409を返します
+        他のユーザーと同じuserNameに更新しようとしたとき409を返します
       operationId: updateUser
       parameters:
         - name: id
@@ -165,11 +165,12 @@ paths:
         ユーザー情報を削除できます - Delete user information
 
         ### Not Found Conditions
-        - 指定したIDのユーザーが存在しない場合、404 Not Foundを返します
+        指定したIDのユーザーが存在しない場合、404 Not Foundを返します
 
         ### Implementation Note
-        - 論理削除を使用します
-        - 物理的なデータは削除されません
+        論理削除を使用します
+
+        物理的なデータは削除されません
       operationId: deleteUser
       parameters:
         - name: id

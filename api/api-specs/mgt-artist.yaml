@@ -67,7 +67,7 @@ paths:
         以下の条件に該当する場合、409 Conflictを返します
         - 同じartistNameが既に存在するとき
         ### Note
-        - 1つのアーティスト名につき1レコードのみ登録可能です
+        1つのアーティスト名につき1レコードのみ登録可能です
       operationId: registerArtist
       requestBody:
         description: アーティスト情報 - Artist information
@@ -107,10 +107,10 @@ paths:
         アーティスト情報を更新できます - You can update artist information
 
         ### Not Found Conditions
-        - 指定したIDのユーザーが存在しない場合、404 Not Foundを返します
+        指定したIDのユーザーが存在しない場合、404 Not Foundを返します
 
         ### Conflict Conditions
-        - 他のアーティストと同じartistNameに更新しようとしたとき409を返します
+        他のアーティストと同じartistNameに更新しようとしたとき409を返します
       operationId: updateArtist
       parameters:
         - name: id
@@ -160,15 +160,17 @@ paths:
         アーティスト情報を削除できます - You can delete artist information
 
         ### Not Found Conditions
-        - 指定したIDのユーザーが存在しない場合、404 Not Foundを返します
+        指定したIDのユーザーが存在しない場合、404 Not Foundを返します
 
         ### Implementation Note
-        - 論理削除を使用します
-        - 物理的なデータは削除されません
+        論理削除を使用します
+
+        物理的なデータは削除されません
 
         ### Related Data
-        - 楽曲データは削除されません
-        - 楽曲から参照されているアーティストは不明なアーティストとして扱われるようになります
+        楽曲データは削除されません
+
+        楽曲から参照されているアーティストは不明なアーティストとして扱われるようになります
       operationId: deleteArtist
       parameters:
         - name: id
