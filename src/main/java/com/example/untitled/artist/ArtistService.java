@@ -34,45 +34,46 @@ public class ArtistService {
         return artistRepository.findByIsDeleted(false, pageable);
     }
 
-    public Artist createArtist(ArtistRequest dto) {
-        artistRepository.findByArtistNameAndIsDeleted(dto.getArtistName(), false)
+    public Artist createArtist(ArtistRequest reqDto) {
+        artistRepository.findByArtistNameAndIsDeleted(reqDto.getArtistName(), false)
                 .ifPresent(artist -> {
                     throw new DuplicationResourceException(
                             "Conflict detected",
                             List.of(new ErrorDetails(
                                     "artistName",
-                                    "Artist name already exist: " + dto.getArtistName()))
+                                    "Artist name already exist: " + reqDto.getArtistName()
+                            ))
                     );
                 });
 
         Artist artist = new Artist();
-        artist.setArtistName(dto.getArtistName());
-        artist.setUnitName(dto.getUnitName());
-        artist.setContent(dto.getContent());
+        artist.setArtistName(reqDto.getArtistName());
+        artist.setUnitName(reqDto.getUnitName());
+        artist.setContent(reqDto.getContent());
 
         return artistRepository.save(artist);
     }
 
-    public Artist updateArtist(Long id, OptionalArtistRequest dto) {
+    public Artist updateArtist(Long id, OptionalArtistRequest reqDto) {
         Artist artist = artistRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new EntityNotFoundException("Artist not found for id: " + id));
 
-        if(dto.getArtistName() != null && !dto.getArtistName().equals(artist.getArtistName())) {
-            artistRepository.findByArtistNameAndIsDeleted(dto.getArtistName(), false)
+        if(reqDto.getArtistName() != null && !reqDto.getArtistName().equals(artist.getArtistName())) {
+            artistRepository.findByArtistNameAndIsDeleted(reqDto.getArtistName(), false)
                     .ifPresent(existArtist -> {
                         throw new DuplicationResourceException(
                                 "Conflict detected",
                                 List.of(new ErrorDetails(
                                         "artistName",
-                                        "Artist name already exist: " + dto.getArtistName()))
+                                        "Artist name already exist: " + reqDto.getArtistName()))
                         );
                     });
         }
 
         // Memo: artist::setArtistNameはラムダ式の簡略記法で(value) -> artist.setArtistName(value));と同じ
-        updateIfNotNull(dto.getArtistName(), artist::setArtistName);
-        updateIfNotNull(dto.getUnitName(), artist::setUnitName);
-        updateIfNotNull(dto.getContent(), artist::setContent);
+        updateIfNotNull(reqDto.getArtistName(), artist::setArtistName);
+        updateIfNotNull(reqDto.getUnitName(), artist::setUnitName);
+        updateIfNotNull(reqDto.getContent(), artist::setContent);
 
         return artistRepository.save(artist);
     }
