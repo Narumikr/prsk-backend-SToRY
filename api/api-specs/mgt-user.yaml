@@ -222,7 +222,7 @@ components:
         userName:
           type: string
           nullable: false
-          example: 星乃 一歌
+          example: 天馬 咲希
           description: ユーザ名 - User Name
       required:
         - id
