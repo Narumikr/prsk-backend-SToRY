@@ -25,6 +25,14 @@ tags:
         - アーティスト一覧取得 - Get artists list
         - アーティスト情報の更新 - Update artist information
         - アーティスト情報の削除 - Delete artist information
+  - name: users
+    description: |
+      ユーザーマスタのデータを管理するAPI - Management data of user master API
+      - **Features**
+        - ユーザー情報の登録 - Register user information
+        - ユーザー一覧取得 - Get users list
+        - ユーザー情報の更新 - Update user information
+        - ユーザー情報の削除 - Delete user information
 
 # ------------------------------------------------------------------------------ #
 #  Paths                                                                         #
@@ -39,3 +47,8 @@ paths:
     $ref: './api-specs/mgt-artist.yaml#/paths/~1artists'
   '/artists/{id}':
     $ref: './api-specs/mgt-artist.yaml#/paths/~1artists~1{id}'
+  # ===== User Master API ====================================================== #
+  '/users':
+    $ref: './api-specs/mgt-user.yaml#/paths/~1users'
+  '/users/{id}':
+    $ref: './api-specs/mgt-user.yaml#/paths/~1users~1{id}'

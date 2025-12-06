@@ -1,28 +1,28 @@
-#api/api-specs/mgt-artist
+#api/api-specs/mgt-user.yaml
 openapi: 3.0.3
 info:
-  title: Artist Master API
-  description: アーティストマスタ管理API - Management artist master api
+  title: User Master API
+  description: ユーザマスタ管理API - Management user master api
   version: 0.0.0
   license:
     name: MIT
 tags:
-  - name: artists
+  - name: users
     description: |
-      アーティストマスタのデータを管理するAPI - Management data of artist master API
+      ユーザマスタのデータを管理するAPI - Management data of user master API
       ## Features
-      - アーティスト情報の登録 - Register artist information
-      - アーティスト一覧取得 - Get artists list
-      - アーティスト情報の更新 - Update artist information
-      - アーティスト情報の削除 - Delete artist information
+      - ユーザ情報の登録 - Register user information
+      - ユーザ一覧取得 - Get users list
+      - ユーザ情報の更新 - Update user information
+      - ユーザ情報の削除 - Delete user information
 paths:
-  '/artists':
+  '/users':
     get:
       tags:
-        - artists
-      summary: アーティスト一覧取得 - Get artists list
-      description: アーティスト一覧が取得できます - You can get artists list
-      operationId: getArtistsList
+        - users
+      summary: ユーザー一覧取得 - Get users list
+      description: ユーザー一覧が取得できます - You can get users list
+      operationId: getUsersList
       parameters:
         - $ref: './common.yaml#/components/parameters/PageParameter'
         - $ref: './common.yaml#/components/parameters/LimitParameter'
@@ -38,7 +38,7 @@ paths:
                     type: array
                     items:
                       allOf:
-                        - $ref: '#/components/schemas/ArtistResponse'
+                        - $ref: '#/components/schemas/UserResponse'
                         - type: object
                           properties:
                             auditInfo:
@@ -58,24 +58,24 @@ paths:
           $ref: './common.yaml#/components/responses/ServiceUnavailable'
     post:
       tags:
-        - artists
-      summary: アーティスト情報の登録 - Register artist information
+        - users
+      summary: ユーザー情報の登録 - Register user information
       description: |
-        アーティスト情報を登録できます - You can register artist information
+        ユーザー情報を登録できます - You can register user information
 
         ### Conflict Conditions
         以下の条件に該当する場合、409 Conflictを返します
-        - 同じartistNameが既に存在するとき
+        - 同じuserNameが既に存在するとき
         ### Note
-        1つのアーティスト名につき1レコードのみ登録可能です
-      operationId: registerArtist
+        1つのユーザー名につき1レコードのみ登録可能です。
+      operationId: createUser
       requestBody:
-        description: アーティスト情報 - Artist information
+        description: ユーザー情報 - User information
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ArtistRequest'
+              $ref: '#/components/schemas/UserRequest'
       responses:
         '201':
           description: Created successfully
@@ -83,7 +83,7 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ArtistResponse'
+                  - $ref: '#/components/schemas/UserResponse'
                   - type: object
                     properties:
                       auditInfo:
@@ -98,36 +98,39 @@ paths:
           $ref: './common.yaml#/components/responses/InternalServerError'
         '503':
           $ref: './common.yaml#/components/responses/ServiceUnavailable'
-  '/artists/{id}':
+  '/users/{id}':
     put:
       tags:
-        - artists
-      summary: アーティスト情報の更新 - Update artist information
+        - users
+      summary: ユーザー情報の更新 - Update user information
       description: |
-        アーティスト情報を更新できます - You can update artist information
+        ユーザー情報を更新できます - You can update user information
 
         ### Not Found Conditions
         指定したIDのユーザーが存在しない場合、404 Not Foundを返します
 
+        ### Authentication error
+        ユーザーに紐づくパスワードが間違っている場合、401 Unauthorizedを返します
+
         ### Conflict Conditions
-        他のアーティストと同じartistNameに更新しようとしたとき409を返します
-      operationId: updateArtist
+        他のユーザーと同じuserNameに更新しようとしたとき409を返します
+      operationId: updateUser
       parameters:
         - name: id
           in: path
-          description: アーティストID - Artist ID
+          description: ユーザーID - User ID
           required: true
           schema:
             type: integer
             minimum: 1
             example: 1
       requestBody:
-        description: アーティスト情報 - Artist information
+        description: ユーザー情報 - User information
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OptionalArtistRequest'
+              $ref: '#/components/schemas/UserRequest'
       responses:
         '200':
           description: Updated successfully
@@ -135,7 +138,7 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ArtistResponse'
+                  - $ref: '#/components/schemas/UserResponse'
                   - type: object
                     properties:
                       auditInfo:
@@ -144,6 +147,8 @@ paths:
                       - auditInfo
         '400':
           $ref: './common.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: './common.yaml#/components/responses/Unauthorized'
         '404':
           $ref: './common.yaml#/components/responses/NotFound'
         '409':
@@ -154,10 +159,10 @@ paths:
           $ref: './common.yaml#/components/responses/ServiceUnavailable'
     delete:
       tags:
-        - artists
-      summary: アーティスト情報の削除 - Delete artist information
+        - users
+      summary: ユーザー情報の削除 - Delete user information
       description: |
-        アーティスト情報を削除できます - You can delete artist information
+        ユーザー情報を削除できます - Delete user information
 
         ### Not Found Conditions
         指定したIDのユーザーが存在しない場合、404 Not Foundを返します
@@ -166,16 +171,11 @@ paths:
         論理削除を使用します
 
         物理的なデータは削除されません
-
-        ### Related Data
-        楽曲データは削除されません
-
-        楽曲から参照されているアーティストは不明なアーティストとして扱われるようになります
-      operationId: deleteArtist
+      operationId: deleteUser
       parameters:
         - name: id
           in: path
-          description: アーティストID - Artist ID
+          description: ユーザーID - User ID
           required: true
           schema:
             type: integer
@@ -195,80 +195,35 @@ paths:
 
 components:
   schemas:
-    ArtistRequest:
+    UserRequest:
       type: object
       properties:
-        artistName:
+        userName:
           type: string
           nullable: false
-          minLength: 1
-          maxLength: 50
-          example: Leo/need
-          description: アーティスト名 - Artist Name
-        unitName:
+          example: 天馬 咲希
+          description: ユーザ名 - User Name
+        password:
           type: string
-          nullable: true
-          minLength: 1
-          maxLength: 25
-          example: Leo/need
-          description: ユニット名 - Unit Name
-        content:
-          type: string
-          nullable: true
-          minLength: 1
-          maxLength: 20
-          example: プロセカ
-          description: コンテンツ名 - Content Name
+          nullable: false
+          example: p@ssw0rd
+          description: パスワード - Password
       required:
-        - artistName
-    OptionalArtistRequest:
-      type: object
-      minProperties: 1
-      properties:
-        artistName:
-          type: string
-          nullable: false
-          minLength: 1
-          maxLength: 50
-          example: Leo/need
-          description: アーティスト名 - Artist Name
-        unitName:
-          type: string
-          nullable: true
-          minLength: 1
-          maxLength: 25
-          example: Leo/need
-          description: ユニット名 - Unit Name
-        content:
-          type: string
-          nullable: true
-          minLength: 1
-          maxLength: 20
-          example: プロセカ
-          description: コンテンツ名 - Content Name
-    ArtistResponse:
+        - userName
+        - password
+    UserResponse:
       type: object
       properties:
         id:
           type: integer
           nullable: false
           example: 1
-          description: アーティストID - Artist ID
-        artistName:
+          description: ユーザID - User ID
+        userName:
           type: string
           nullable: false
-          example: Leo/need
-          description: アーティスト名 - Artist Name
-        unitName:
-          type: string
-          nullable: true
-          example: Leo/need
-          description: ユニット名 - Unit Name
-        content:
-          type: string
-          nullable: true
-          example: プロセカ
-          description: コンテンツ名 - Content Name
+          example: 天馬 咲希
+          description: ユーザ名 - User Name
       required:
         - id
-        - artistName
+        - userName
