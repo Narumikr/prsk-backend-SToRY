@@ -33,7 +33,7 @@ public class UserController {
     // PUT /users/{id} : ユーザー情報の更新 - Update user information
     @PutMapping("/{id}")
     public ResponseEntity<UserResponse> updateUser(
-            @PathVariable @Min(value = 1, message = "IDは1以上である必要があります。 - ID must be 1 or greater.") Long id,
+            @PathVariable @Min(value = 1, message = "ID must be 1 or greater.") Long id,
             @Valid @RequestBody UserRequest request
     ) {
         User user = userService.updateUser(id, request);
