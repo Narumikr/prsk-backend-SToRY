@@ -88,6 +88,23 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 401 Unauthorized
+     */
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorResponseWithDetails> handleUnauthorizedError(
+            UnauthorizedException exception
+    ) {
+        ErrorResponseWithDetails error = new ErrorResponseWithDetails(
+                HttpStatus.UNAUTHORIZED.value(),
+                HttpStatus.UNAUTHORIZED.name(),
+                exception.getMessage(),
+                exception.getDetails()
+        );
+
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    }
+
+    /**
      * 409 Conflict
      */
     @ExceptionHandler(DuplicationResourceException.class)

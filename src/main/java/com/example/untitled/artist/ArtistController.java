@@ -53,12 +53,12 @@ public class ArtistController {
     // PUT /artists/{id} : アーティスト情報の更新 - Update artist information
     @PutMapping("/{id}")
     public ResponseEntity<ArtistResponse> updateArtist(
-            @PathVariable Long id,
+            @PathVariable @Min(value = 1, message = "ID must be 1 or greater.") Long id,
             @Valid @RequestBody OptionalArtistRequest request
     ) {
         Artist artist = artistService.updateArtist(id, request);
         ArtistResponse response = ArtistResponse.from(artist);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.ok(response);
     }
 
     // DELETE /artists/{id} : アーティスト情報の削除 - Delete artist information
