@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: 'gradle'
+    directories:
+      - '/'
+    schedule:
+      interval: 'weekly'
+  - package-ecosystem: 'npm'
+    directories:
+      - '/api'
+    schedule:
+      interval: 'weekly'
+  - package-ecosystem: 'github-actions'
+    directories:
+      - '/.github/workflows'
+    schedule:
+      interval: 'weekly'
