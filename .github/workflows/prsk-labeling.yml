@@ -1,4 +1,3 @@
-# .github/workflows/pr-labeling.yml
 name: PR prsk labeling
 
 on:
@@ -14,46 +13,7 @@ jobs:
   add-character-label:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Create and add character label with random encounter
-        uses: actions/github-script@v8
+      - name: Set prsk label
+        uses: Narumikr/link-sekai-actions/prsk-pr-labeling@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const fs = require('fs');
-            const path = require('path');
-
-            // Import constants file
-            const constantsCode = fs.readFileSync(
-              path.join(process.env.GITHUB_WORKSPACE, '.github/scripts/prsk-yell-label.constants.js'),
-              'utf8'
-            );
-
-            // Import logic file
-            const logicCode = fs.readFileSync(
-              path.join(process.env.GITHUB_WORKSPACE, '.github/scripts/prsk-labeling-logic.js'),
-              'utf8'
-            );
-
-            // Combine both files and remove export/import statements
-            let combinedCode = constantsCode + '\n\n' + logicCode;
-
-            // Delete import statements
-            combinedCode = combinedCode.replace(/import\s+{[^}]+}\s+from\s+['"][^'"]+['"];?\n?/g, '');
-
-            // Remove export statements and assign to globalThis
-            combinedCode = combinedCode.replace(/export\s+const\s+(\w+)\s*=/g, 'globalThis.$1 =');
-            combinedCode = combinedCode.replace(/export\s+function\s+(\w+)/g, 'globalThis.$1 = function $1');
-            combinedCode = combinedCode.replace(/export\s+async\s+function\s+(\w+)/g, 'globalThis.$1 = async function $1');
-
-            // Evaluate the combined code
-            eval(combinedCode);
-
-            // Exec main task
-            if (typeof globalThis.handlePrLabeling === 'function') {
-              await globalThis.handlePrLabeling(github, context);
-            } else {
-              throw new Error('handlePrLabeling is not defined. Available: ' + Object.keys(globalThis).filter(k => k.includes('handle')).join(', '));
-            }
