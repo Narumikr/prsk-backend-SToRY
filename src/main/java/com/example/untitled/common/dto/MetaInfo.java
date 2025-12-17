@@ -24,7 +24,7 @@ public class MetaInfo {
     /** ページあたりのアイテム数 **/
     private int limit;
 
-    public static MetaInfo from(Page<Artist> page) {
+    public static <T>MetaInfo from(Page<T> page) {
         return new MetaInfo(
                 page.getTotalElements(),
                 page.getTotalPages(),
