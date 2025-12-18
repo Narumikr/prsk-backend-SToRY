@@ -6,6 +6,10 @@ import com.example.untitled.common.exception.UnauthorizedException;
 import com.example.untitled.user.dto.UserRequest;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +21,14 @@ public class UserService {
     private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) { this.userRepository = userRepository; }
+
+    public Page<User> getAllUsers(int page, int size, String sortBy, String direction) {
+        Sort.Direction sortDirection = direction.equalsIgnoreCase("DESC")
+                ? Sort.Direction.DESC : Sort.Direction.ASC;
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
+        return userRepository.findByIsDeleted(false, pageable);
+    }
 
     public User createUser(UserRequest reqDto) {
         userRepository.findByUserNameAndIsDeleted(reqDto.getUserName(), false)
