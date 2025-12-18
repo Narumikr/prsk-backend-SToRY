@@ -57,4 +57,13 @@ public class UserController {
         UserResponse response = UserResponse.from(user);
         return ResponseEntity.ok(response);
     }
+
+    // DELETE /users/{id} : ユーザー情報の削除 - Delete user information
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteUser(
+            @PathVariable Long id
+    ) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
 }
