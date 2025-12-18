@@ -87,4 +87,12 @@ public class UserService {
 
         return userRepository.save(existingUser);
     }
+
+    public void deleteUser(Long id) {
+        User user = userRepository.findByIdAndIsDeleted(id, false)
+                .orElseThrow(() -> new EntityNotFoundException("User not found for id: " + id));
+
+        user.setDeleted(true);
+        userRepository.save(user);
+    }
 }
