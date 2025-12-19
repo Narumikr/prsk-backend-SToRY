@@ -46,6 +46,12 @@ tasks.named("test") {
 
 tasks.register("openReport") {
     doLast {
+        // CI環境(GitHub Actions等)ではブラウザ表示をスキップ
+        if (System.getenv("CI") == "true") {
+            println "CI environment detected. Skipping browser opening."
+            return
+        }
+
         def reportPath = "${project.buildDir}/reports/tests/test/index.html"
         def reportFile = new File(reportPath)
 
@@ -56,12 +62,17 @@ tasks.register("openReport") {
 
         println "Opening: $reportPath"
 
-        if (System.properties['os.name'].toLowerCase().contains('windows')) {
-            exec { commandLine 'cmd', '/c', "start", reportPath }
-        } else if (System.properties['os.name'].toLowerCase().contains('mac')) {
-            exec { commandLine 'open', reportPath }
-        } else {
-            exec { commandLine 'xdg-open', reportPath }
+        try {
+            if (System.properties['os.name'].toLowerCase().contains('windows')) {
+                exec { commandLine 'cmd', '/c', "start", reportPath }
+            } else if (System.properties['os.name'].toLowerCase().contains('mac')) {
+                exec { commandLine 'open', reportPath }
+            } else {
+                exec { commandLine 'xdg-open', reportPath }
+            }
+        } catch (Exception e) {
+            println "Failed to open browser: ${e.message}"
+            println "You can manually open the report at: $reportPath"
         }
     }
 }
