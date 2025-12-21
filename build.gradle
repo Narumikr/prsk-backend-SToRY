@@ -58,7 +58,7 @@ configurations {
 tasks.register('dockerComposeUp', Exec) {
     description = 'Starts PostgreSQL container for E2E tests'
     group = 'docker'
-    commandLine 'docker-compose', '-f', 'docker-compose.e2e.yml', 'up', '-d'
+    commandLine 'docker', 'compose', '-f', 'docker-compose.e2e.yml', 'up', '-d'
     doLast {
         // Wait for PostgreSQL to be ready
         println 'Waiting for PostgreSQL to be ready...'
@@ -89,7 +89,7 @@ tasks.register('dockerComposeUp', Exec) {
 tasks.register('dockerComposeDown', Exec) {
     description = 'Stops PostgreSQL container for E2E tests'
     group = 'docker'
-    commandLine 'docker-compose', '-f', 'docker-compose.e2e.yml', 'down'
+    commandLine 'docker', 'compose', '-f', 'docker-compose.e2e.yml', 'down'
 }
 
 // Unit Test task

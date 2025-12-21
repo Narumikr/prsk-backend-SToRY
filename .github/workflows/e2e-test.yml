@@ -45,4 +45,4 @@ jobs:
 
       - name: Stop Docker containers
         if: always()
-        run: docker-compose -f docker-compose.e2e.yml down
+        run: docker compose -f docker-compose.e2e.yml down
