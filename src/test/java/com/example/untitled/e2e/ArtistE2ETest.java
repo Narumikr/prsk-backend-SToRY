@@ -313,7 +313,7 @@ class ArtistE2ETest extends E2ETestBase {
 
             // Act: Try to update non-existent artist
             ResponseEntity<ErrorResponse> response = restTemplate.exchange(
-                    getBaseUrl() + ARTISTS_PATH + "/999999",
+                    getBaseUrl() + ARTISTS_PATH + "/" + Long.MAX_VALUE,
                     HttpMethod.PUT,
                     new HttpEntity<>(updateRequest),
                     ErrorResponse.class
@@ -413,7 +413,7 @@ class ArtistE2ETest extends E2ETestBase {
         void deleteArtistError_withNotFound() {
             // Act
             ResponseEntity<ErrorResponse> response = restTemplate.exchange(
-                    getBaseUrl() + ARTISTS_PATH + "/999999",
+                    getBaseUrl() + ARTISTS_PATH + "/" + Long.MAX_VALUE,
                     HttpMethod.DELETE,
                     null,
                     ErrorResponse.class
