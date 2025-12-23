@@ -7,6 +7,9 @@ services:
       POSTGRES_PASSWORD: e2e_password
       POSTGRES_DB: e2e_testdb
     ports:
+      # Map container port 5432 (Postgres default) to host port 5433 to avoid clashing
+      # with the dev database, which uses 5432 on the host. This separation allows
+      # dev and E2E databases to run concurrently without conflicts.
       - "5433:5432"
     volumes:
       - postgres-e2e-data:/var/lib/postgresql/data
