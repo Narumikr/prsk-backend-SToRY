@@ -4,11 +4,13 @@ import com.example.untitled.artist.Artist;
 import com.example.untitled.common.dto.AuditInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * アーティストマスタAPIレスポンス
  */
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class ArtistResponse {
 

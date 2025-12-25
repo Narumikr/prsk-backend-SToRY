@@ -1,0 +1,23 @@
+services:
+  postgres-e2e:
+    image: postgres:16-alpine
+    container_name: prsk-e2e-db
+    environment:
+      POSTGRES_USER: e2e_user
+      POSTGRES_PASSWORD: e2e_password
+      POSTGRES_DB: e2e_testdb
+    ports:
+      # Map container port 5432 (Postgres default) to host port 5433 to avoid clashing
+      # with the dev database, which uses 5432 on the host. This separation allows
+      # dev and E2E databases to run concurrently without conflicts.
+      - "5433:5432"
+    volumes:
+      - postgres-e2e-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U e2e_user -d e2e_testdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-e2e-data:

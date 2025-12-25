@@ -37,5 +37,6 @@
     "**/node_modules": true,
     "**/dist": true,
     "**/*.lock": true
-  }
+  },
+  "java.configuration.updateBuildConfiguration": "interactive"
 }

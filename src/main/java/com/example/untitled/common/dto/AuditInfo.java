@@ -3,6 +3,7 @@ package com.example.untitled.common.dto;
 import com.example.untitled.common.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
  * Audit 情報
  */
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class AuditInfo {
 

@@ -32,35 +32,98 @@ dependencies {
     testImplementation("org.mockito:mockito-core")
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testRuntimeOnly("com.h2database:h2")
+    testRuntimeOnly 'org.postgresql:postgresql'
 }
 
-tasks.named("test") {
-    useJUnitPlatform()
+// E2E Test configuration
+sourceSets {
+    e2eTest {
+        java {
+            srcDir 'src/test/java'
+        }
+        resources {
+            srcDir 'src/test/resources'
+        }
+        compileClasspath += sourceSets.main.output + sourceSets.test.output
+        runtimeClasspath += sourceSets.main.output + sourceSets.test.output
+    }
+}
+
+configurations {
+    e2eTestImplementation.extendsFrom testImplementation
+    e2eTestRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
+// Docker tasks for E2E tests
+tasks.register('dockerComposeUp', Exec) {
+    description = 'Starts PostgreSQL container for E2E tests'
+    group = 'docker'
+    commandLine 'docker', 'compose', '-f', 'docker-compose.e2e.yml', 'up', '-d'
+    doLast {
+        // Wait for PostgreSQL to be ready
+        println 'Waiting for PostgreSQL to be ready...'
+        def maxAttempts = 30
+        def attempt = 0
+        while (attempt < maxAttempts) {
+            try {
+                def result = exec {
+                    commandLine 'docker', 'exec', 'prsk-e2e-db', 'pg_isready', '-U', 'e2e_user', '-d', 'e2e_testdb'
+                    ignoreExitValue = true
+                }
+                if (result.exitValue == 0) {
+                    println 'PostgreSQL is ready!'
+                    break
+                }
+            } catch (Exception e) {
+                // ignore
+            }
+            attempt++
+            Thread.sleep(1000)
+        }
+        if (attempt >= maxAttempts) {
+            throw new GradleException('PostgreSQL failed to start within timeout')
+        }
+    }
+}
+
+tasks.register('dockerComposeDown', Exec) {
+    description = 'Stops PostgreSQL container for E2E tests'
+    group = 'docker'
+    commandLine 'docker', 'compose', '-f', 'docker-compose.e2e.yml', 'down'
+}
+
+// Unit Test task
+tasks.register('testUnit', Test) {
+    description = 'Runs unit tests only'
+    group = 'verification'
+
+    useJUnitPlatform {
+        excludeTags 'e2e'
+    }
 
     jvmArgs '-javaagent:' + configurations.testRuntimeClasspath.find {
         it.name.contains('byte-buddy-agent')
     }
 
-    finalizedBy("openReport")
+    finalizedBy("openUnitReport")
 }
 
-tasks.register("openReport") {
+tasks.register("openUnitReport") {
     doLast {
-        // CI環境(GitHub Actions等)ではブラウザ表示をスキップ
         if (System.getenv("CI") == "true") {
             println "CI environment detected. Skipping browser opening."
             return
         }
 
-        def reportPath = "${project.buildDir}/reports/tests/test/index.html"
+        def reportPath = "${project.buildDir}/reports/tests/testUnit/index.html"
         def reportFile = new File(reportPath)
 
         if (!reportFile.exists()) {
-            println "Report not found: $reportPath"
+            println "Unit Test Report not found: $reportPath"
             return
         }
 
-        println "Opening: $reportPath"
+        println "Opening Unit Test Report: $reportPath"
 
         try {
             if (System.properties['os.name'].toLowerCase().contains('windows')) {
@@ -75,4 +138,66 @@ tasks.register("openReport") {
             println "You can manually open the report at: $reportPath"
         }
     }
+}
+
+// E2E Test task
+tasks.register('testE2e', Test) {
+    description = 'Runs E2E tests against PostgreSQL database'
+    group = 'verification'
+
+    dependsOn 'dockerComposeUp'
+
+    testClassesDirs = sourceSets.e2eTest.output.classesDirs
+    classpath = sourceSets.e2eTest.runtimeClasspath
+
+    useJUnitPlatform {
+        includeTags 'e2e'
+    }
+
+    systemProperty 'spring.profiles.active', 'e2e'
+
+    jvmArgs '-javaagent:' + configurations.testRuntimeClasspath.find {
+        it.name.contains('byte-buddy-agent')
+    }
+
+    finalizedBy("openE2eReport")
+}
+
+tasks.register("openE2eReport") {
+    doLast {
+        if (System.getenv("CI") == "true") {
+            println "CI environment detected. Skipping browser opening."
+            return
+        }
+
+        def reportPath = "${project.buildDir}/reports/tests/testE2e/index.html"
+        def reportFile = new File(reportPath)
+
+        if (!reportFile.exists()) {
+            println "E2E Test Report not found: $reportPath"
+            return
+        }
+
+        println "Opening E2E Test Report: $reportPath"
+
+        try {
+            if (System.properties['os.name'].toLowerCase().contains('windows')) {
+                exec { commandLine 'cmd', '/c', "start", reportPath }
+            } else if (System.properties['os.name'].toLowerCase().contains('mac')) {
+                exec { commandLine 'open', reportPath }
+            } else {
+                exec { commandLine 'xdg-open', reportPath }
+            }
+        } catch (Exception e) {
+            println "Failed to open browser: ${e.message}"
+            println "You can manually open the report at: $reportPath"
+        }
+    }
+}
+
+// Combined test task - runs both unit and E2E tests
+tasks.named("test") {
+    dependsOn 'testUnit', 'testE2e'
+    // Disable default test execution since we delegate to testUnit and testE2e
+    enabled = false
 }
