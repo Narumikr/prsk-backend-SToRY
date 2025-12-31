@@ -345,7 +345,58 @@ All resources follow consistent CRUD patterns:
 - Keep methods focused and single-purpose
 - Use meaningful variable names
 
+## 8. Code Review Guidelines (CRITICAL)
+
+When performing code reviews, **ALWAYS** verify the following items:
+
+### Review Communication
+- **Comment in Japanese**: All review comments must be written in Japanese (日本語でコメントすること)
+- **Provide Specific Code**: Review feedback must include concrete code examples (具体的なコードを示すこと)
+
+### Code Quality Checks
+- **Spell Check & Syntax**: Verify spelling and syntax errors that humans commonly miss (スペルミスや構文ミスなど人がケアレスミスしやすい部分も確認すること)
+- **Naming Conventions**: Ensure naming follows standard conventions, not custom or unusual patterns (命名規則が一般的なものと異なっていないか)
+
+### Architecture & Design
+- **Domain-Driven Design**: Verify the code follows DDD principles appropriately (ドメイン駆動設計として適切になっているか)
+- **Role Separation**: Check that DTOs, Entities, and other components maintain proper separation of concerns (DTOやEntityなどの役割が混ざってしまっていないか、適切に役割分担できているか)
+  - DTOs: Request/Response objects for API layer
+  - Entities: JPA entities with business logic
+  - Services: Business logic orchestration
+  - Repositories: Data access layer
+
+### API Design
+- **REST Principles**: Ensure API specifications follow REST principles (REST原則にAPI仕様が沿っているか)
+  - Proper HTTP methods (GET, POST, PUT, DELETE)
+  - Correct status codes (200, 201, 400, 404, 409, etc.)
+  - Resource-based URLs
+  - Stateless communication
+
+### Error Handling & Performance
+- **Exception Handling**: Verify exception handling is consistent across the codebase (例外処理が統一されているか)
+  - Use `GlobalExceptionHandler` for centralized error handling
+  - Throw appropriate custom exceptions (`EntityNotFoundException`, `DuplicationResourceException`)
+- **Performance Optimization**: Check for optimization opportunities and performance improvements (パフォーマンスとして最適化されているか、改善できる部分は存在しないか)
+  - Unnecessary database queries
+  - N+1 query problems
+  - Missing indexes
+  - Inefficient algorithms
+
+### Review Checklist
+
+Use this checklist for every code review:
+- [ ] Comments are written in Japanese
+- [ ] Specific code examples provided in feedback
+- [ ] No spelling or syntax errors
+- [ ] Naming conventions are standard and consistent
+- [ ] DDD principles are properly applied
+- [ ] DTOs and Entities are properly separated
+- [ ] REST principles are followed
+- [ ] Exception handling is consistent
+- [ ] Performance is optimized
+- [ ] No obvious improvement opportunities exist
+
 ---
 
 **Last Updated**: 2025-12-31
-**Version**: 1.0.0
+**Version**: 1.1.0
