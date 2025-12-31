@@ -21,7 +21,7 @@ paths:
       tags:
         - prsk-music
       summary: プロセカ楽曲リストの取得 - Get prsk music list
-      description: プロセカ楽曲一覧が取得できます - You can get prsk
+      description: プロセカ楽曲一覧が取得できます - You can get prsk music list
       operationId: getPrskMusicList
       parameters:
         - $ref: './common.yaml#/components/parameters/PageParameter'
