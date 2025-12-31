@@ -126,7 +126,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PrskMusicRequest'
+              $ref: '#/components/schemas/OptionalPrskMusicRequest'
       responses:
         '200':
           description: Updated successfully
@@ -346,5 +346,5 @@ components:
       description: |
         楽曲の種類:
         - 0 : オリジナル（オリジナル楽曲）
-        - 1 : 3DMV（プロセカ3DMV楽曲）
-        - 2 : 2DMV（プロセカ2DMV楽曲）
+        - 1 : 3DMV (プロセカ3DMV楽曲)
+        - 2 : 2DMV (プロセカ2DMV楽曲)
