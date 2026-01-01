@@ -66,8 +66,6 @@ paths:
         ### Conflict Conditions
         以下の条件に該当する場合、409 Conflictを返します
         - 同じartistNameが既に存在するとき
-        ### Note
-        1つのアーティスト名につき1レコードのみ登録可能です
       operationId: registerArtist
       requestBody:
         description: アーティスト情報 - Artist information

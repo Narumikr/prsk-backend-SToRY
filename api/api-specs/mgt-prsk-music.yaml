@@ -1,0 +1,350 @@
+#api/api-specs/mgt-prsk-music.yaml
+openapi: 3.0.3
+info:
+  title: prsk Music API
+  description: プロセカ楽曲マスタ管理API - Management prsk music master api
+  version: 0.0.0
+  license:
+    name: MIT
+tags:
+  - name: prsk-music
+    description: |
+      プロセカ楽曲マスタのデータを管理するAPI - Management data of prsk music master API
+      ## Features
+      - 楽曲情報の登録 - Register music information
+      - 楽曲一覧取得 - Get music list
+      - 楽曲情報の更新 - Update music information
+      - 楽曲情報の削除 - Delete music information
+paths:
+  '/prsk-music':
+    get:
+      tags:
+        - prsk-music
+      summary: プロセカ楽曲リストの取得 - Get prsk music list
+      description: プロセカ楽曲一覧が取得できます - You can get prsk music list
+      operationId: getPrskMusicList
+      parameters:
+        - $ref: './common.yaml#/components/parameters/PageParameter'
+        - $ref: './common.yaml#/components/parameters/LimitParameter'
+      responses:
+        '200':
+          description: Get list successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: '#/components/schemas/PrskMusicResponse'
+                        - type: object
+                          properties:
+                            auditInfo:
+                              $ref: './common.yaml#/components/schemas/AuditInfo'
+                          required:
+                            - auditInfo
+                  meta:
+                    $ref: './common.yaml#/components/schemas/Metadata'
+                required:
+                  - items
+                  - meta
+        '400':
+          $ref: './common.yaml#/components/responses/BadRequest'
+        '500':
+          $ref: './common.yaml#/components/responses/InternalServerError'
+        '503':
+          $ref: './common.yaml#/components/responses/ServiceUnavailable'
+    post:
+      tags:
+        - prsk-music
+      summary: プロセカ楽曲の登録 - Register prsk music information
+      description: |
+        プロセカ楽曲情報を登録します - Register prsk music information
+
+        ### Conflict Conditions
+        以下の条件に該当する場合、409 Conflictを返します
+        - 同じタイトルの楽曲が既に存在していて、かつ楽曲タイプも同じとき
+      operationId: registerPrskMusic
+      requestBody:
+        description: プロセカ楽曲情報 - Prsk music information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrskMusicRequest'
+      responses:
+        '201':
+          description: Created successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PrskMusicResponse'
+                  - type: object
+                    properties:
+                      auditInfo:
+                        $ref: './common.yaml#/components/schemas/AuditInfo'
+                    required:
+                      - auditInfo
+        '400':
+          $ref: './common.yaml#/components/responses/BadRequest'
+        '409':
+          $ref: './common.yaml#/components/responses/Conflict'
+        '500':
+          $ref: './common.yaml#/components/responses/InternalServerError'
+        '503':
+          $ref: './common.yaml#/components/responses/ServiceUnavailable'
+  '/prsk-music/{id}':
+    put:
+      tags:
+        - prsk-music
+      summary: プロセカ楽曲情報の更新 - Update prsk music information
+      description: |
+        プロセカ楽曲情報を更新できます - You can update prsk music information
+
+        ### Not Found Conditions
+        指定された楽曲IDが存在しない場合、404 Not Foundを返します
+
+        ### Conflict Conditions
+        以下の条件に該当する場合、409 Conflictを返します
+        - 同じタイトルの楽曲が既に存在していて、かつ楽曲タイプも同じとき
+      operationId: updatePrskMusic
+      parameters:
+        - name: id
+          in: path
+          description: 楽曲ID - Music ID
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 1
+      requestBody:
+        description: プロセカ楽曲情報 - Prsk music information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OptionalPrskMusicRequest'
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PrskMusicResponse'
+                  - type: object
+                    properties:
+                      auditInfo:
+                        $ref: './common.yaml#/components/schemas/AuditInfo'
+                    required:
+                      - auditInfo
+        '400':
+          $ref: './common.yaml#/components/responses/BadRequest'
+        '404':
+          $ref: './common.yaml#/components/responses/NotFound'
+        '409':
+          $ref: './common.yaml#/components/responses/Conflict'
+        '500':
+          $ref: './common.yaml#/components/responses/InternalServerError'
+        '503':
+          $ref: './common.yaml#/components/responses/ServiceUnavailable'
+    delete:
+      tags:
+        - prsk-music
+      summary: プロセカ楽曲情報の削除 - Delete prsk music information
+      description: |
+        プロセカ楽曲情報を削除できます - You can delete prsk music information
+
+        ### Not Found Conditions
+        指定したIDの楽曲情報が存在しない場合、404 Not Foundを返します
+
+        ### Implementation Notes
+        論理削除を使用します
+
+        物理的なデータは削除されません
+      operationId: deletePrskMusic
+      parameters:
+        - name: id
+          in: path
+          description: 楽曲ID - Music ID
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 1
+      responses:
+        '204':
+          description: Deleted successfully
+        '400':
+          $ref: './common.yaml#/components/responses/BadRequest'
+        '404':
+          $ref: './common.yaml#/components/responses/NotFound'
+        '500':
+          $ref: './common.yaml#/components/responses/InternalServerError'
+        '503':
+          $ref: './common.yaml#/components/responses/ServiceUnavailable'
+
+components:
+  schemas:
+    PrskMusicRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          nullable: false
+          example: SToRY
+          description: 楽曲タイトル - Music title
+        artistId:
+          type: integer
+          nullable: false
+          example: 1
+          description: |
+            アーティストID - Artist ID
+            - `GET /artists`で取得できるアーティストIDを指定してください - Please specify the artist ID that can be obtained with `GET /artists`
+        musicType:
+          $ref: '#/components/schemas/MusicType'
+        specially:
+          type: boolean
+          nullable: true
+          example: true
+          description: プロセカ書き下ろし楽曲かどうか - Whether it is a prsk specially commissioned music
+        lyricsName:
+          type: string
+          nullable: true
+          example: DECO*27
+          description: 作詞者名 - Lyricist name
+        musicName:
+          type: string
+          nullable: true
+          example: DECO*27
+          description: 作曲者名 - Composer name
+        featuring:
+          type: string
+          nullable: true
+          example: 初音ミク
+          description: ゲストメンバー名 - Featuring member name
+        youtubeLink:
+          type: string
+          nullable: false
+          example: https://www.youtube.com/watch?v=9fnQklaziX4&list=RD9fnQklaziX4&start_radio=1
+          description: YouTubeリンク - YouTube link
+      required:
+        - title
+        - artistId
+        - musicType
+        - youtubeLink
+    OptionalPrskMusicRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          nullable: false
+          example: SToRY
+          description: 楽曲タイトル - Music title
+        artistId:
+          type: integer
+          nullable: false
+          example: 1
+          description: |
+            アーティストID - Artist ID
+            - `GET /artists`で取得できるアーティストIDを指定してください - Please specify the artist ID that can be obtained with `GET /artists`
+        musicType:
+          $ref: '#/components/schemas/MusicType'
+        specially:
+          type: boolean
+          nullable: true
+          example: true
+          description: プロセカ書き下ろし楽曲かどうか - Whether it is a prsk specially commissioned music
+        lyricsName:
+          type: string
+          nullable: true
+          example: DECO*27
+          description: 作詞者名 - Lyricist name
+        musicName:
+          type: string
+          nullable: true
+          example: DECO*27
+          description: 作曲者名 - Composer name
+        featuring:
+          type: string
+          nullable: true
+          example: 初音ミク
+          description: ゲストメンバー名 - Featuring member name
+        youtubeLink:
+          type: string
+          nullable: false
+          example: https://www.youtube.com/watch?v=9fnQklaziX4&list=RD9fnQklaziX4&start_radio=1
+          description: YouTubeリンク - YouTube link
+    PrskMusicResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          nullable: false
+          example: 1
+          description: 楽曲ID - Music ID
+        title:
+          type: string
+          nullable: false
+          example: SToRY
+          description: 楽曲タイトル - Music title
+        artistName:
+          type: string
+          nullable: false
+          example: Leo/need
+          description: アーティスト名 - Artist name
+        unitName:
+          type: string
+          nullable: true
+          example: Leo/need
+          description: ユニット名 - Unit name
+        content:
+          type: string
+          nullable: true
+          example: プロセカ
+          description: コンテンツ名 - Content name
+        musicType:
+          $ref: '#/components/schemas/MusicType'
+        specially:
+          type: boolean
+          nullable: true
+          example: true
+          description: プロセカ書き下ろし楽曲かどうか - Whether it is a prsk specially commissioned music
+        lyricsName:
+          type: string
+          nullable: true
+          example: DECO*27
+          description: 作詞者名 - Lyricist name
+        musicName:
+          type: string
+          nullable: true
+          example: DECO*27
+          description: 作曲者名 - Composer name
+        featuring:
+          type: string
+          nullable: true
+          example: 初音ミク
+          description: ゲストメンバー名 - Featuring member name
+        youtubeLink:
+          type: string
+          nullable: false
+          example: https://www.youtube.com/watch?v=9fnQklaziX4&list=RD9fnQklaziX4&start_radio=1
+          description: YouTubeリンク - YouTube link
+      required:
+        - id
+        - title
+        - artistName
+        - musicType
+        - youtubeLink
+    MusicType:
+      type: integer
+      nullable: false
+      example: 0
+      description: |
+        楽曲の種類:
+        - 0 : オリジナル（オリジナル楽曲）
+        - 1 : 3DMV (プロセカ3DMV楽曲)
+        - 2 : 2DMV (プロセカ2DMV楽曲)

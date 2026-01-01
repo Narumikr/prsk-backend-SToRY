@@ -25,6 +25,14 @@ tags:
         - アーティスト一覧取得 - Get artists list
         - アーティスト情報の更新 - Update artist information
         - アーティスト情報の削除 - Delete artist information
+  - name: prsk-music
+    description: |
+      プロセカ楽曲マスタのデータを管理するAPI - Management data of prsk music master API
+      - **Features**
+        - プロセカ楽曲情報の登録 - Register prsk music information
+        - プロセカ楽曲一覧取得 - Get prsk music list
+        - プロセカ楽曲情報の更新 - Update prsk music information
+        - プロセカ楽曲情報の削除 - Delete prsk music information
   - name: users
     description: |
       ユーザーマスタのデータを管理するAPI - Management data of user master API
@@ -47,6 +55,11 @@ paths:
     $ref: './api-specs/mgt-artist.yaml#/paths/~1artists'
   '/artists/{id}':
     $ref: './api-specs/mgt-artist.yaml#/paths/~1artists~1{id}'
+  # ===== prsk Music Master API ================================================ #
+  '/prsk-music':
+    $ref: './api-specs/mgt-prsk-music.yaml#/paths/~1prsk-music'
+  '/prsk-music/{id}':
+    $ref: './api-specs/mgt-prsk-music.yaml#/paths/~1prsk-music~1{id}'
   # ===== User Master API ====================================================== #
   '/users':
     $ref: './api-specs/mgt-user.yaml#/paths/~1users'
