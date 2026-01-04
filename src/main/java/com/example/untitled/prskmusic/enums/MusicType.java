@@ -40,7 +40,7 @@ public enum MusicType {
                 "Bad Request",
                 List.of(new ErrorDetails(
                         "MusicType",
-                        "Invalid MusicType :" + code
+                        "Invalid MusicType: " + code
                 ))
         );
     }
