@@ -43,4 +43,13 @@ public class PrskMusicController {
         PrskMusicResponse response = PrskMusicResponse.from(prskMusic);
         return ResponseEntity.ok(response);
     }
+
+    // Delete /prsk-music/{id} : プロセカ楽曲情報の削除 - Delete prsk music information
+    @DeleteMapping("/{id}")
+    public ResponseEntity deletePrskMusic(
+            @PathVariable Long id
+    ) {
+        prskMusicService.deletePrskMusic(id);
+        return ResponseEntity.noContent().build();
+    }
 }
