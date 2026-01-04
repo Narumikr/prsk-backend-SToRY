@@ -1,10 +1,13 @@
 package com.example.untitled.prskmusic;
 
 import com.example.untitled.prskmusic.dto.OptionalPrskMusicRequest;
+import com.example.untitled.prskmusic.dto.PrskMusicListResponse;
 import com.example.untitled.prskmusic.dto.PrskMusicRequest;
 import com.example.untitled.prskmusic.dto.PrskMusicResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -22,6 +25,18 @@ public class PrskMusicController {
     }
 
     // GET /prsk-music : プロセカ楽曲一覧取得 - Get prsk music list
+    @GetMapping
+    public ResponseEntity<PrskMusicListResponse> getPrskMusicList(
+            @RequestParam(required = false, defaultValue = "1")
+            @Min(value = 1, message = "Page must be 1 or greater") Integer page,
+            @RequestParam(required = false, defaultValue = "20")
+            @Min(value = 1, message = "Limit must be at least 1")
+            @Max(value = 100, message = "Limit must not exceed 100") Integer limit
+    ) {
+        Page<PrskMusic> prskMusicPage = prskMusicService.getAllPrskMusic(page - 1, limit, "title", "ASC");
+        PrskMusicListResponse response = PrskMusicListResponse.from(prskMusicPage);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 
     // POST /prsk-music : プロセカ楽曲情報の登録 - Register prsk music information
     @PostMapping
