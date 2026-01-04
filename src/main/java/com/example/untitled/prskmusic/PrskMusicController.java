@@ -1,15 +1,14 @@
 package com.example.untitled.prskmusic;
 
+import com.example.untitled.prskmusic.dto.OptionalPrskMusicRequest;
 import com.example.untitled.prskmusic.dto.PrskMusicRequest;
 import com.example.untitled.prskmusic.dto.PrskMusicResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/prsk-music")
@@ -32,5 +31,16 @@ public class PrskMusicController {
         PrskMusic prskMusic = prskMusicService.createPrskMusic(request);
         PrskMusicResponse response = PrskMusicResponse.from(prskMusic);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    // PUT /prsk-music/{id} : プロセカ楽曲情報の更新 - Update prsk music information
+    @PutMapping("/{id}")
+    public ResponseEntity<PrskMusicResponse> updatePrskMusic(
+            @PathVariable @Min(value = 1, message = "ID must be 1 or greater.") Long id,
+            @Valid @RequestBody OptionalPrskMusicRequest request
+    ) {
+        PrskMusic prskMusic = prskMusicService.updatePrskMusic(id, request);
+        PrskMusicResponse response = PrskMusicResponse.from(prskMusic);
+        return ResponseEntity.ok(response);
     }
 }

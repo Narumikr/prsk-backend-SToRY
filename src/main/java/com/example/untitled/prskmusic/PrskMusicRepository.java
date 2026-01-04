@@ -13,5 +13,7 @@ public interface PrskMusicRepository extends JpaRepository<PrskMusic, Long> {
 
     Page<PrskMusic> findByIsDeleted(boolean isDeleted, Pageable pageable);
 
+    Optional<PrskMusic> findByIdAndIsDeleted(Long id, boolean isDeleted);
+
     Optional<PrskMusic> findByTitleAndMusicTypeAndIsDeleted(String title, MusicType musicType, boolean isDeleted);
 }

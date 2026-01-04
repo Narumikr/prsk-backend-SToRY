@@ -4,12 +4,16 @@ import com.example.untitled.artist.Artist;
 import com.example.untitled.artist.ArtistRepository;
 import com.example.untitled.common.dto.ErrorDetails;
 import com.example.untitled.common.exception.DuplicationResourceException;
+import com.example.untitled.prskmusic.dto.OptionalPrskMusicRequest;
 import com.example.untitled.prskmusic.dto.PrskMusicRequest;
+import com.example.untitled.prskmusic.enums.MusicType;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static com.example.untitled.common.util.EntityHelper.updateIfNotNull;
 
 @Service
 @Transactional
@@ -54,6 +58,46 @@ public class PrskMusicService {
         prskMusic.setMusicName(reqDto.getMusicName());
         prskMusic.setFeaturing(reqDto.getFeaturing());
         prskMusic.setYoutubeLink(reqDto.getYoutubeLink());
+
+        return prskMusicRepository.save(prskMusic);
+    }
+
+    public PrskMusic updatePrskMusic(Long id, OptionalPrskMusicRequest reqDto) {
+        PrskMusic prskMusic = prskMusicRepository.findByIdAndIsDeleted(id, false)
+                .orElseThrow(() -> new EntityNotFoundException("Prsk music not found for id: " + id));
+
+        String newTitle = reqDto.getTitle() != null ? reqDto.getTitle() : prskMusic.getTitle();
+        MusicType newMusicType = reqDto.getMusicType() != null ? reqDto.getMusicType() : prskMusic.getMusicType();
+
+        boolean isTitleChanged = reqDto.getTitle() != null && !reqDto.getTitle().equals(prskMusic.getTitle());
+        boolean isMusicTypeChanged = reqDto.getMusicType() != null && !reqDto.getMusicType().equals(prskMusic.getMusicType());
+
+        if(isTitleChanged || isMusicTypeChanged) {
+            prskMusicRepository.findByTitleAndMusicTypeAndIsDeleted(newTitle, newMusicType, false)
+                    .ifPresent(existPrskMusic -> {
+                        if(!existPrskMusic.getId().equals(id)) {
+                            throw new DuplicationResourceException(
+                                    "Conflict detected.",
+                                    List.of(new ErrorDetails(
+                                            "Title and MusicType",
+                                            "Duplicate title and music type combination."
+                                    ))
+                            );
+                        }
+                    });
+        }
+
+        Artist artist = artistRepository.findByIdAndIsDeleted(reqDto.getArtistId(), false)
+                .orElseThrow(() -> new EntityNotFoundException("Artist not found for id: " + reqDto.getArtistId()));
+
+        updateIfNotNull(reqDto.getTitle(), prskMusic::setTitle);
+        prskMusic.setArtist(artist);
+        updateIfNotNull(reqDto.getMusicType(), prskMusic::setMusicType);
+        updateIfNotNull(reqDto.getSpecially(), prskMusic::setSpecially);
+        updateIfNotNull(reqDto.getLyricsName(), prskMusic::setLyricsName);
+        updateIfNotNull(reqDto.getMusicName(), prskMusic::setMusicName);
+        updateIfNotNull(reqDto.getFeaturing(), prskMusic::setFeaturing);
+        updateIfNotNull(reqDto.getYoutubeLink(), prskMusic::setYoutubeLink);
 
         return prskMusicRepository.save(prskMusic);
     }
