@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * プロセカ楽曲マスタAPIリスエスト for POST
+ * プロセカ楽曲マスタAPIリクエスト for POST
  */
 @Getter
 @Setter
