@@ -27,7 +27,7 @@ public class PrskMusic extends BaseEntity {
     @JoinColumn(name = "artist_id", nullable = false)
     private Artist artist;
 
-    @Column(nullable = false)
+    @Column(name = "music_type", nullable = false)
     private MusicType musicType;
 
     @Column()
